@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>항공정비 필기 5과목 마스터</title>
+<title>항공정비 필기 5과목 통합 마스터</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Oswald:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -42,7 +42,7 @@
   #menuScreen h2{font-family:'Oswald',sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:var(--text);}
   #menuScreen p.desc{font-size:13px;color:var(--text-dim);margin:0 0 20px;}
   
-  .set-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:14px;}
+  .set-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));gap:14px;}
   .set-card{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:18px 16px;cursor:pointer;transition:all .15s;text-align:left;}
   .set-card:hover{border-color:var(--amber);background:#243038;transform:translateY(-2px);}
   .set-card .s-num{font-family:'Space Mono',monospace;font-size:11px;color:var(--amber);margin-bottom:4px;letter-spacing:.05em;}
@@ -204,11 +204,11 @@
 </div>
 
 <script>
-// 5과목 데이터베이스 (현재 항공기체 등록 완료, 나머지 4과목은 파일 올려주시면 채워넣어 드립니다)
+// 요청하신 5과목 명칭 적용 (항공기체는 기존 25선 데이터 탑재 완료)
 const ALL_SUBJECTS = [
   {
-    title: "1. 항공기체",
-    sub: "구조·계통·재료·정비 통합",
+    title: "항공기체",
+    sub: "구조·계통·재료·정비 통합 기출",
     questions: [
       {tag:"도면", q:"도면에서 부품의 위치를 참조용으로 표시하고자 할 때 사용되는 선의 종류는?", opts:["스티치선(Stitch Line)","파단선(Break Line)","숨김선(Hidden Line)","가상선(Phantom Line)"], ansText:"가상선(Phantom Line)" , ex:"가상선(Phantom Line)은 부품의 인접 위치나 참조용 위치, 이동 범위 등을 표시할 때 사용하는 1점 쇄선 계열의 선이다."},
       {tag:"계통", q:"항공기 Air Condition System 내에 있는 혼합 밸브(Mixing Valve)의 기능은?", opts:["비상 램 에어와 조절된 공기로 혼합한다.","뜨거운 공기, 찬 공기, 냉각공기의 공급을 조정한다.","조절된 공기를 기내의 모든 장치에 분배한다.","건조한 공기와 혼합시켜 기내 공기의 습기를 제거한다."], ansText:"건조한 공기와 혼합시켜 기내 공기의 습기를 제거한다." , ex:"Mixing Valve는 팩(Pack)에서 나온 건조한 냉각공기와 엔진 블리드 공기(또는 리사이클 공기)를 혼합시켜 기내 공기의 온도와 습도를 조절하는 역할을 한다."},
@@ -238,36 +238,36 @@ const ALL_SUBJECTS = [
     ]
   },
   {
-    title: "2. 항공엔진",
+    title: "발동기",
     sub: "왕복엔진 및 가스 turbine 엔진",
     questions: [
-      {tag:"엔진준비중", q:"항공엔진 관련 문제는 파일을 올려주시면 추가됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"준비 중인 과목입니다."}
+      {tag:"발동기", q:"발동기 과목 문제 파일이나 텍스트를 올려주시면 이곳에 등록됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"문제를 추가해 주세요."}
     ]
   },
   {
-    title: "3. 전기·전자",
-    sub: "항공기 전기 및 전자계통",
+    title: "항공전자전기계기",
+    sub: "항공기 전기, 전자 및 계기 계통",
     questions: [
-      {tag:"전기준비중", q:"전기·전자 관련 문제는 파일을 올려주시면 추가됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"준비 중인 과목입니다."}
+      {tag:"전자전기", q:"항공전자전기계기 과목 문제 파일이나 텍스트를 올려주시면 이곳에 등록됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"문제를 추가해 주세요."}
     ]
   },
   {
-    title: "4. 항공법규",
-    sub: "항공안전법 및 관련 규정",
+    title: "항공법규",
+    sub: "항공안전법 및 관련 법령",
     questions: [
-      {tag:"법규준비중", q:"항공법규 관련 문제는 파일을 올려주시면 추가됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"준비 중인 과목입니다."}
+      {tag:"법규", q:"항공법규 과목 문제 파일이나 텍스트를 올려주시면 이곳에 등록됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"문제를 추가해 주세요."}
     ]
   },
   {
-    title: "5. 항공역학",
-    sub: "공기역학 및 비행원리",
+    title: "정비일반",
+    sub: "항공기 정비 일반 지식 및 공구",
     questions: [
-      {tag:"역학준비중", q:"항공역학 관련 문제는 파일을 올려주시면 추가됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"준비 중인 과목입니다."}
+      {tag:"정비일반", q:"정비일반 과목 문제 파일이나 텍스트를 올려주시면 이곳에 등록됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"문제를 추가해 주세요."}
     ]
   }
 ];
 
-// 5과목 메뉴 렌더링
+// 과목 메뉴 렌더링
 function renderSubjectMenu() {
   const grid = document.getElementById('setGridContainer');
   grid.innerHTML = '';
