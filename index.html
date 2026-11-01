@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>항공기체 기출 25선 · 통합 셔플 모드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Oswald:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12181c; --panel: #1a2227; --panel-2: #212a30; --line: #303c44;
+    --amber: #2fb8c9; --amber-dim: #1c6e78; --teal: #2dd4bf; --red: #ef4444;
+    --text: #e8ecef; --text-dim: #8a959c;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: radial-gradient(1200px 600px at 50% -10%, #1c262c 0%, var(--bg) 60%);
+    color:var(--text); font-family:'Noto Sans KR', sans-serif;
+    min-height:100vh; padding:28px 16px 60px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .cluster{
+    display:flex;align-items:center;gap:18px;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:18px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 8px 24px rgba(0,0,0,0.35);
+  }
+  .gauge{position:relative;width:74px;height:74px;flex:none;}
+  .gauge svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .gauge circle{fill:none;stroke-width:7;}
+  .gauge .track{stroke:#243038;}
+  .gauge .fill{stroke:var(--amber);stroke-linecap:round;transition:stroke-dashoffset .5s ease;}
+  .gauge .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--amber);}
+  .cluster-title{flex:1;min-width:0;}
+  .eyebrow{font-family:'Space Mono',monospace;letter-spacing:.14em;font-size:11px;color:var(--amber);
+    text-transform:uppercase;margin:0 0 4px;}
+  .cluster-title h1{font-family:'Oswald',sans-serif;font-weight:600;font-size:20px;margin:0;
+    color:var(--text);letter-spacing:.01em;}
+  .cluster-title p{margin:4px 0 0;font-size:12.5px;color:var(--text-dim);}
+  .mode-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;
+    background:rgba(47,184,201,0.12);color:var(--amber);border:1px solid var(--amber-dim);
+    border-radius:20px;padding:4px 10px;flex:none;white-space:nowrap;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    padding:26px 24px 22px;position:relative;overflow:hidden;box-shadow: 0 10px 30px rgba(0,0,0,0.35);}
+  .card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--amber),var(--amber-dim) 60%, transparent);}
+  .qmeta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;}
+  .qnum{font-family:'Space Mono',monospace;color:var(--amber);font-size:13px;letter-spacing:.06em;}
+  .qtag{font-family:'Space Mono',monospace;color:var(--text-dim);font-size:11px;
+    border:1px solid var(--line);border-radius:20px;padding:3px 10px;}
+  .qtext{font-size:17.5px;line-height:1.55;font-weight:500;margin:0 0 20px;color:var(--text);}
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .opt{display:flex;align-items:center;gap:12px;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:10px;padding:13px 14px;cursor:pointer;font-size:15px;color:var(--text);
+    text-align:left;transition:border-color .15s, background .15s, transform .1s;}
+  .opt:hover{border-color:var(--amber-dim);background:#243038;}
+  .opt:active{transform:scale(.995);}
+  .opt .num{font-family:'Space Mono',monospace;width:22px;height:22px;border-radius:50%;
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:var(--text-dim);flex:none;}
+  .opt.picked{border-color:var(--amber);background:rgba(47,184,201,0.10);}
+  .opt.picked .num{background:var(--amber);color:#08181a;border-color:var(--amber);}
+  .navrow{display:flex;justify-content:space-between;align-items:center;margin-top:20px;}
+  .btn{font-family:'Oswald',sans-serif;font-weight:500;letter-spacing:.03em;
+    background:var(--amber);color:#08181a;border:none;border-radius:10px;
+    padding:11px 22px;font-size:14.5px;cursor:pointer;transition:filter .15s, transform .1s;}
+  .btn:hover{filter:brightness(1.1);}
+  .btn:active{transform:scale(.98);}
+  .btn.ghost{background:transparent;color:var(--text-dim);border:1px solid var(--line);}
+  .btn:disabled{opacity:.35;cursor:not-allowed;filter:none;}
+  .dots{display:flex;gap:5px;flex-wrap:wrap;max-width:260px;justify-content:center;}
+  .dot{width:7px;height:7px;border-radius:50%;background:#2a343c;cursor:pointer;}
+  .dot.answered{background:var(--amber);}
+  .dot.current{outline:2px solid var(--teal);outline-offset:2px;}
+  .submit-note{text-align:center;font-size:12px;color:var(--text-dim);margin-top:14px;
+    font-family:'Space Mono',monospace;}
+  .result{display:none;text-align:center;padding:10px 6px 4px;}
+  .result.show{display:block;}
+  .result .big{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:var(--amber);
+    line-height:1;margin:6px 0 2px;}
+  .result .sub{color:var(--text-dim);font-size:13px;margin-bottom:22px;}
+  .grade{font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;margin-bottom:24px;color:var(--text);}
+  .section-label{text-align:left;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;
+    color:var(--text-dim);text-transform:uppercase;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+  .section-label::after{content:"";flex:1;height:1px;background:var(--line);}
+  .perfect-msg{background:rgba(45,212,191,0.09);border:1px solid var(--teal);border-radius:10px;
+    padding:16px;color:var(--teal);font-size:14px;margin-bottom:22px;text-align:left;}
+  .wrong-review{text-align:left;display:flex;flex-direction:column;gap:14px;margin-bottom:24px;}
+  .wrong-card{background:var(--panel-2);border:1px solid var(--line);border-left:3px solid var(--red);
+    border-radius:10px;padding:14px 16px;}
+  .wrong-card .wq{font-size:14.5px;font-weight:500;line-height:1.5;margin:0 0 12px;color:var(--text);}
+  .wrong-card .wq .wqn{font-family:'Space Mono',monospace;color:var(--red);margin-right:6px;}
+  .answer-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .apill{font-family:'Space Mono',monospace;font-size:12px;border-radius:20px;padding:5px 12px;
+    display:flex;align-items:center;gap:6px;}
+  .apill.my{background:rgba(239,68,68,0.12);color:#ff9d9d;border:1px solid rgba(239,68,68,0.4);}
+  .apill.correctans{background:rgba(45,212,191,0.12);color:var(--teal);border:1px solid rgba(45,212,191,0.4);}
+  .wexplain{background:#151c20;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+    font-size:13px;line-height:1.6;color:#c7cfd4;}
+  .wexplain b{color:var(--amber);font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.05em;
+    display:block;margin-bottom:6px;}
+  .restart{width:100%;}
+  footer{text-align:center;color:var(--text-dim);font-size:11px;margin-top:22px;
+    font-family:'Space Mono',monospace;letter-spacing:.04em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="cluster">
+    <div class="gauge">
+      <svg viewBox="0 0 74 74">
+        <circle class="track" cx="37" cy="37" r="30"></circle>
+        <circle class="fill" id="progressRing" cx="37" cy="37" r="30" stroke-dasharray="188.5" stroke-dashoffset="188.5"></circle>
+      </svg>
+      <div class="val" id="progressVal">0/25</div>
+    </div>
+    <div class="cluster-title">
+      <p class="eyebrow">Airframe · 항공기체 실전모의고사 · 통합 셔플</p>
+      <h1>항공기체 기출 25선 (통합본)</h1>
+      <p>중복 제거 및 보기 순서 무작위 셔플 적용 완료</p>
+    </div>
+    <span class="mode-badge">시험 모드</span>
+  </div>
+
+  <div class="card" id="quizCard">
+    <div class="qmeta">
+      <span class="qnum" id="qnum">Q01 / 25</span>
+      <span class="qtag" id="qtag">구조</span>
+    </div>
+    <p class="qtext" id="qtext">문제 로딩 중...</p>
+    <div class="options" id="options"></div>
+    <div class="navrow">
+      <button class="btn ghost" id="prevBtn">← 이전</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn" id="nextBtn" disabled>다음 →</button>
+    </div>
+    <p class="submit-note" id="submitNote"></p>
+  </div>
+
+  <div class="card result" id="resultCard">
+    <p class="eyebrow" style="text-align:center;">FINAL SCORE</p>
+    <div class="big" id="finalScore">0 / 25</div>
+    <div class="sub">정답률 <span id="finalPct">0%</span></div>
+    <div class="grade" id="grade"></div>
+    <div id="wrongSection">
+      <p class="section-label">오답 노트</p>
+      <div class="wrong-review" id="wrongReview"></div>
+    </div>
+    <button class="btn restart" id="restartBtn">다시 풀기</button>
+  </div>
+
+  <footer>항공기체 통합 기출문제 · 25 QUESTIONS · SHUFFLE MODE</footer>
+</div>
+
+<script>
+// 원본 데이터 (중복 제거 및 25선 엄선)
+const RAW_QUESTIONS = [
+  {tag:"도면", q:"도면에서 부품의 위치를 참조용으로 표시하고자 할 때 사용되는 선의 종류는?", opts:["스티치선(Stitch Line)","파단선(Break Line)","숨김선(Hidden Line)","가상선(Phantom Line)"], ansText:"가상선(Phantom Line)" , ex:"가상선(Phantom Line)은 부품의 인접 위치나 참조용 위치, 이동 범위 등을 표시할 때 사용하는 1점 쇄선 계열의 선이다."},
+  {tag:"계통", q:"항공기 Air Condition System 내에 있는 혼합 밸브(Mixing Valve)의 기능은?", opts:["비상 램 에어와 조절된 공기로 혼합한다.","뜨거운 공기, 찬 공기, 냉각공기의 공급을 조정한다.","조절된 공기를 기내의 모든 장치에 분배한다.","건조한 공기와 혼합시켜 기내 공기의 습기를 제거한다."], ansText:"건조한 공기와 혼합시켜 기내 공기의 습기를 제거한다." , ex:"Mixing Valve는 팩(Pack)에서 나온 건조한 냉각공기와 엔진 블리드 공기(또는 리사이클 공기)를 혼합시켜 기내 공기의 온도와 습도를 조절하는 역할을 한다."},
+  {tag:"재료", q:"알루미늄 금속을 AL-CLAD 처리 후 비닐로 포장을 하는 경우가 있는데 이때 비닐의 역할을 무엇인가?", opts:["회사를 표시하기 위함","먼지가 침투되는 것을 방지","제품을 포장하기 위한 비닐로 사용","표면을 손상으로부터 보호하기 위함"], ansText:"표면을 손상으로부터 보호하기 위함" , ex:"AL-CLAD(알클래드) 처리된 알루미늄판은 표면의 순수 알루미늄 피막층이 스크래치 등으로 손상되지 않도록 비닐로 표면을 보호한 채로 유통·보관한다."},
+  {tag:"정비작업", q:"고무로 제작된 항공기 부품 중 Seal 또는 Gasket을 보관하는 방법 중 적절하지 않은 것은?", opts:["일반적으로 보관장소의 온도 24℃ 이하, 습도는 50~55%가 가장 적당하다.","고무의 노화의 원인인 오존, 열, 산소에 노출되지 않도록 한다.","빛에 노출되지 않도록 어두운 곳에 보관한다.","점검 시 내부가 보이도록 투명 비닐로 포장하여 보관한다."], ansText:"점검 시 내부가 보이도록 투명 비닐로 포장하여 보관한다." , ex:"고무 제품은 자외선(빛)에 노출되면 노화가 촉진되므로 불투명한 포장재로 차광 보관해야 하며, 내부가 보이는 투명 비닐 포장은 부적절하다."},
+  {tag:"일반", q:"다음의 측정단위 중 성격이 다른 것은 무엇인가?", opts:["Quart","Gallon","Pint","Pound"], ansText:"Pound" , ex:"Quart, Gallon, Pint는 모두 부피(체적) 단위이며, Pound(파운드)는 무게(질량) 단위이다."},
+  {tag:"정비작업", q:"Aluminium Alloy Casting으로 만들어진 부품의 표면에 균열을 검사하는 방법으로 부적절한 것은?", opts:["육안검사","형광침투검사","자분탐상검사","와전류 탐상"], ansText:"자분탐상검사" , ex:"자분탐상검사는 강자성체에만 적용 가능하므로 비자성체인 알루미늄합금 주조품에는 사용할 수 없고, 알루미늄 표면 균열 검사에는 육안검사나 침투탐상검사가 일반적으로 사용된다."},
+  {tag:"일반", q:"용접봉의 피복재가 녹는 용접으로 옳은 것은?", opts:["TIG Welding","MIG Welding","Electric Arc Welding","Plasma Arc Welding"], ansText:"Electric Arc Welding" , ex:"피복 아크 용접(Electric Arc Welding, SMAW)은 피복재(flux coating)가 입혀진 용접봉을 사용하며, 용접 시 피복재가 녹으면서 보호 가스막과 슬래그를 한다."},
+  {tag:"계통", q:"다음 중 항공유 특징에 대한 설명으로 옳지 않은 것은?", opts:["발열량이 커야하고, 휘발성이 좋으며 증기폐색(Vapor Lock)을 일으키지 않아야 한다.","안티 노킹(Anti-Knocking)값이 작아야 한다.","안정성이 좋아야 하고, 부식성이 적어야 한다.","저온에 강해야 한다."], ansText:"안티 노킹(Anti-Knocking)값이 작아야 한다." , ex:"항공용 연료는 안티 노킹(anti-knock)성이 커야(즉 옥탄가가 높아야) 노킹을 방지할 수 있다. '안티 노킹값이 작아야 한다'는 설명은 틀렸다."},
+  {tag:"구조", q:"항공기 페어링(Fairing)에 대한 역할로 틀린 것은?", opts:["모양을 보기 좋게 해준다.","구성품을 외부 이물질로부터 보호해준다.","공기저항을 감소시켜 항공기 성능을 향상시켜 준다.","이음새를 고정하는 부분에 사용하므로 고강도 재질을 사용해야 한다."], ansText:"이음새를 고정하는 부분에 사용하므로 고강도 재질을 사용해야 한다." , ex:"페어링은 외형을 매끄럽게 하여 공기저항을 줄이고 내부 부품을 보호하는 비구조적 외피 부재이며, 고강도 재질을 필요로 하지 않는다."},
+  {tag:"구조", q:"판금가공에서 성형점과 굴곡접선과의 거리는 무엇인가?", opts:["굽힘 여유(Bend Allowance)","세트 백(Set Back)","브레이크 라인(Brake Line)","범핑(Bumping)"], ansText:"세트 백(Set Back)" , ex:"세트 백(Set Back)은 굽힘 작업 시 성형점(mold point)과 굴곡접선(bend tangent line) 사이의 거리를 말한다."},
+  {tag:"정비작업", q:"토크 렌치(Torque Wrench)에 대한 설명으로 틀린 것은?", opts:["교정일자가 사용 전 유효한지 확인해야 한다.","토크값에 적합한 범위의 토크 렌치를 사용해야 한다.","리미트식 토크 렌치는 사용 후 토크 값을 중간 범위의 눈금으로 돌려놓는다.","토크 렌치를 떨어뜨리거나 충격을 주었을 경우 정밀도가 떨어지므로 재검정을 하고 사용해야 한다."], ansText:"리미트식 토크 렌치는 사용 후 토크 값을 중간 범위의 눈금으로 돌려놓는다." , ex:"리미트식 토크 렌치는 사용 후 세팅값을 최소값으로 돌려놓아 내부 스프링의 피로를 방지해야 한다."},
+  {tag:"계통", q:"다음 중 Bleed Air를 사용하지 않는 곳은?", opts:["Cabin Window Air","Engine Starting","Wing Anti-Icing","Air Condition System"], ansText:"Cabin Window Air" , ex:"객실 창문(Cabin Window)의 방빙·서리 제거는 대개 전기 가열 방식(Electric Heating)을 사용한다."},
+  {tag:"계통", q:"항공기 유압계통이나 공압계통에 있는 체크 밸브(Check Valve)의 역할은 무엇인가?", opts:["작동유의 순서를 결정해준다.","계통의 순서를 결정해준다.","압력을 일정하게 해준다.","작동유를 한 방향으로 흐르게 해준다."], ansText:"작동유를 한 방향으로 흐르게 해준다." , ex:"체크 밸브(Check Valve)는 유체가 한 방향으로만 흐르도록 하고 역류를 막는 밸브이다."},
+  {tag:"구조", q:"항공기 조종계통에서 조종케이블의 방향을 변환하는 것은?", opts:["Pulley","Fairlead","Turn buckle","Quadrant"], ansText:"Pulley" , ex:"풀리(Pulley)는 조종케이블이 지나가는 경로를 바꿀 때(방향 전환) 사용되는 도르래이다."},
+  {tag:"재료", q:"항공기 기체구조재에 사용되는 재질 중 금속이 아닌 것은?", opts:["구리","탄소","티탄","니켈"], ansText:"탄소" , ex:"구리, 티탄, 니켈은 모두 금속이며, 탄소는 비금속 원소이다."},
+  {tag:"재료", q:"금속의 성질 중 탄성(Elasticity)에 대해 옳은 것은?", opts:["재료가 균열이나 파손이 되지 않고 굽혀지거나 늘어나는 능력을 말한다.","재료가 굽혀지거나 변형이 될 때 깨지는 현상을 말한다.","재료의 질긴 성질을 말한다.","외력이 없어질 때 원래의 형태로 되돌아가려는 성질이다."], ansText:"외력이 없어질 때 원래의 형태로 되돌아가려는 성질이다." , ex:"탄성(Elasticity)은 외력을 제거했을 때 재료가 원래의 형태와 치수로 되돌아가려는 성질이다."},
+  {tag:"계통", q:"항공기에 사용하는 작동유 구비조건으로 아닌 것은?", opts:["점도지수가 낮아야 한다.","내열성이 있어야 한다.","윤활성이 있어야 한다.","온도 변화에 따른 점도 변화가 낮아야 한다."], ansText:"점도지수가 낮아야 한다." , ex:"작동유는 온도가 변해도 점도 변화가 적어야 하므로 점도지수는 오히려 높아야 한다."},
+  {tag:"재료", q:"항공기에 사용하는 복합소재에 대한 설명 중 맞는 것은?", opts:["가격이 고가이다.","일반 금속 재료에 비해 가격이 저렴한 금속 재료이다.","두 종류 이상의 재료를 사용하여 합금 처리한 재료이다.","두 종류 이상의 재료를 인위적으로 배합하여 각각의 물질보다 뛰어난 성질을 가지도록 한 합금 재료이다."], ansText:"두 종류 이상의 재료를 인위적으로 배합하여 각각의 물질보다 뛰어난 성질을 가지도록 한 합금 재료이다." , ex:"복합재료는 서로 다른 재료를 배합해 우수한 물성을 갖도록 만든 재료이다."},
+  {tag:"재료", q:"양극처리(Anodizing)는 금속의 어떤 작용을 이용한 것인가?", opts:["전해 이온화 작용","전해 산화 작용","전해 분리 작용","전해 이온 작용"], ansText:"전해 산화 작용" , ex:"아노다이징은 금속을 양극으로 하여 표면에 산화피막을 형성시키는 전해 산화 작용을 이용한다."},
+  {tag:"계통", q:"현대 항공기 유압계통에 사용하지 않는 작동유는 무엇인가?", opts:["합성유","동물성유","식물성유","광물성유"], ansText:"동물성유" , ex:"현대 항공기 유압계통에는 주로 합성유를 사용하며 동물성유는 사용되지 않는다."},
+  {tag:"계통", q:"다음 밸브 중 역할이 3개와 다른 것은?", opts:["Relief Valve","Thermal Relief Valve","Wing Flap Overload Valve","Pressure Reduce Valve"], ansText:"Wing Flap Overload Valve" , ex:"플랩 오버로드 밸브는 과부하 방지 목적이며 나머지는 압력 제한·조절 밸브이다."},
+  {tag:"정비작업", q:"다음 중 측정 기구가 아닌 것은?", opts:["Rules","Scriber","Combination Set","Vernier Calipers"], ansText:"Scriber" , ex:"스크라이버(Scriber)는 금긋기(마킹)용 공구이다."},
+  {tag:"구조", q:"앞 착륙장치에 마찰을 일으키면서 타이어가 미끄러져 마모되는 것을 방지하는 것은?", opts:["시미 댐퍼","테일 스키드","퓨즈 플러그","안티 스키드"], ansText:"안티 스키드" , ex:"안티 스키드(Anti-Skid) 장치는 제동 시 타이어 미끄러짐을 방지한다."},
+  {tag:"정비작업", q:"항공기에 사용되는 가요성 호스(Flexible Hose) 장착에 대한 다음 설명 중 틀린 것은?", opts:["비틀림이 있어도 호스에 영향이 없다.","비틀림이 너무 과하면 호스의 Fitting이 풀린다.","비틀림을 확인할 수 있도록 호스에 확인선이 있다.","비틀림이 과하면 호스의 수명이 줄어든다."], ansText:"비틀림이 있어도 호스에 영향이 없다." , ex:"가요성 호스는 장착 시 비틀림이 생기면 안 된다."},
+  {tag:"계통", q:"항공기 공압계통(Pneumatic System)의 장점으로 틀린 것은?", opts:["불연성이고 깨끗하다.","레저버와 리턴 라인이 필요 없다.","서보 계통으로서 정밀한 조종이 가능하다.","압력, 온도, 유량으로 이용되는 범위가 제한된다."], ansText:"압력, 온도, 유량으로 이용되는 범위가 제한된다." , ex:"이용 범위 제한은 공압계통의 단점에 해당한다."}
+];
+
+let QUESTIONS = [];
+let current = 0;
+let selected = [];
+const total = 25;
+
+// 진입할 때마다 보기 순서 랜덤 셔플 (Fisher-Yates) 및 25선 구성
+function initQuiz() {
+  QUESTIONS = RAW_QUESTIONS.map(item => {
+    let opts = [...item.opts];
+    let correctText = item.ansText;
+    
+    // 보기 섞기
+    for (let i = opts.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [opts[i], opts[j]] = [opts[j], opts[i]];
+    }
+    
+    // 섞인 보기 속에서 정답의 새로운 인덱스 찾기
+    let newA = opts.indexOf(correctText);
+    
+    return {
+      tag: item.tag,
+      q: item.q,
+      opts: opts,
+      a: newA,
+      ex: item.ex
+    };
+  });
+  
+  selected = new Array(QUESTIONS.length).fill(null);
+}
+
+const qnumEl = document.getElementById('qnum');
+const qtagEl = document.getElementById('qtag');
+const qtextEl = document.getElementById('qtext');
+const optionsEl = document.getElementById('options');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const dotsEl = document.getElementById('dots');
+const progressRing = document.getElementById('progressRing');
+const progressVal = document.getElementById('progressVal');
+const quizCard = document.getElementById('quizCard');
+const resultCard = document.getElementById('resultCard');
+const submitNote = document.getElementById('submitNote');
+
+function buildDots(){
+  dotsEl.innerHTML = '';
+  QUESTIONS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.id = 'dot'+i;
+    d.addEventListener('click', () => { current = i; renderQuestion(); });
+    dotsEl.appendChild(d);
+  });
+}
+function updateDots(){
+  QUESTIONS.forEach((_, i) => {
+    const d = document.getElementById('dot'+i);
+    d.className = 'dot';
+    if(i === current) d.classList.add('current');
+    if(selected[i] !== null) d.classList.add('answered');
+  });
+}
+function updateHeader(){
+  const answeredCount = selected.filter(s => s !== null).length;
+  const circumference = 188.5;
+  const offset = circumference - (answeredCount/total) * circumference;
+  progressRing.style.strokeDashoffset = offset;
+  progressVal.textContent = answeredCount + '/' + total;
+}
+function renderQuestion(){
+  const item = QUESTIONS[current];
+  qnumEl.textContent = 'Q' + String(current+1).padStart(2,'0') + ' / ' + total;
+  qtagEl.textContent = item.tag;
+  qtextEl.textContent = item.q;
+  optionsEl.innerHTML = '';
+  item.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (selected[current] === i ? ' picked' : '');
+    btn.innerHTML = '<span class="num">' + (i+1) + '</span><span>' + opt + '</span>';
+    btn.addEventListener('click', () => selectOption(i));
+    optionsEl.appendChild(btn);
+  });
+  prevBtn.disabled = current === 0;
+  const answeredCount = selected.filter(s => s !== null).length;
+  const allAnswered = answeredCount === total;
+  if(current === total - 1){
+    nextBtn.textContent = '제출하고 채점하기 →';
+    nextBtn.disabled = !allAnswered;
+    submitNote.textContent = allAnswered ? '' : '아직 ' + (total - answeredCount) + '문제가 남았습니다. 전부 풀어야 채점할 수 있어요.';
+  } else {
+    nextBtn.textContent = '다음 →';
+    nextBtn.disabled = selected[current] === null;
+    submitNote.textContent = '';
+  }
+  updateDots();
+  updateHeader();
+}
+function selectOption(i){
+  selected[current] = i;
+  renderQuestion();
+}
+prevBtn.addEventListener('click', () => { if(current > 0){ current--; renderQuestion(); } });
+nextBtn.addEventListener('click', () => {
+  if(current < total - 1){ current++; renderQuestion(); }
+  else {
+    const answeredCount = selected.filter(s => s !== null).length;
+    if(answeredCount === total) showResult();
+  }
+});
+function showResult(){
+  quizCard.style.display = 'none';
+  resultCard.classList.add('show');
+  const correctCount = selected.reduce((acc, s, i) => acc + (s === QUESTIONS[i].a ? 1 : 0), 0);
+  const pct = Math.round((correctCount/total)*100);
+  document.getElementById('finalScore').textContent = correctCount + ' / ' + total;
+  document.getElementById('finalPct').textContent = pct + '%';
+  let gradeText = '';
+  if(pct >= 90) gradeText = '🛩 기체 과목도 든든합니다';
+  else if(pct >= 70) gradeText = '✈ 거의 다 왔어요 — 오답 노트 확인하세요';
+  else if(pct >= 50) gradeText = '🔧 절반은 확보 — 반복 학습이 필요해요';
+  else gradeText = '📘 기초부터 차근차근 복습하세요';
+  document.getElementById('grade').textContent = gradeText;
+  const wrongReview = document.getElementById('wrongReview');
+  const wrongSection = document.getElementById('wrongSection');
+  wrongReview.innerHTML = '';
+  const wrongList = QUESTIONS.map((item,i)=>({item,i})).filter(o => selected[o.i] !== o.item.a);
+  if(wrongList.length === 0){
+    wrongSection.innerHTML = '<div class="perfect-msg">🎯 오답이 없습니다. 25문제 전부 맞혔어요!</div>';
+  } else {
+    wrongList.forEach(({item, i}) => {
+      const myAns = selected[i];
+      const div = document.createElement('div');
+      div.className = 'wrong-card';
+      div.innerHTML =
+        '<p class="wq"><span class="wqn">Q' + (i+1) + '.</span>' + item.q + '</p>' +
+        '<div class="answer-row">' +
+          '<span class="apill my">내 답 &nbsp;' + (myAns+1) + '. ' + item.opts[myAns] + '</span>' +
+          '<span class="apill correctans">정답 &nbsp;' + (item.a+1) + '. ' + item.opts[item.a] + '</span>' +
+        '</div>' +
+        '<div class="wexplain"><b>해설</b>' + item.ex + '</div>';
+      wrongReview.appendChild(div);
+    });
+  }
+}
+document.getElementById('restartBtn').addEventListener('click', () => {
+  current = 0;
+  initQuiz(); // 다시 시작할 때도 보기 새롭게 섞기
+  quizCard.style.display = 'block';
+  resultCard.classList.remove('show');
+  buildDots();
+  renderQuestion();
+});
+
+// 최초 실행
+initQuiz();
+buildDots();
+renderQuestion();
+</script>
+</body>
+</html>
