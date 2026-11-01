@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>항공정비기능사 과목별 기출 통합 시스템</title>
+<title>항공정비사 기출 통합 시스템</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Oswald:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -30,7 +30,8 @@
   .eyebrow{font-family:'Space Mono',monospace;letter-spacing:.14em;font-size:11px;color:var(--amber);
     text-transform:uppercase;margin:0 0 4px;}
   
-  /* 과목 선택 메인 메뉴 스타일 */
+  /* 메인 메뉴 화면 전용 스타일 */
+  #menuScreen {display: block;}
   #menuScreen h1{font-family:'Oswald',sans-serif;font-weight:600;font-size:24px;margin:0 0 8px;color:var(--text);}
   #menuScreen p.desc{font-size:13.5px;color:var(--text-dim);margin:0 0 20px;}
   .menu-list{display:flex;flex-direction:column;gap:12px;}
@@ -42,7 +43,8 @@
   .menu-badge{font-family:'Space Mono',monospace;font-size:11px;background:rgba(47,184,201,0.12);
     color:var(--amber);border:1px solid var(--amber-dim);border-radius:20px;padding:5px 12px;flex:none;}
 
-  /* 퀴즈 진행 화면 스타일 */
+  /* 퀴즈 화면 스타일 */
+  #quizScreen {display: none;}
   .cluster{
     display:flex;align-items:center;gap:18px;
     background:linear-gradient(180deg,var(--panel-2),var(--panel));
@@ -92,7 +94,7 @@
   .dot.current{outline:2px solid var(--teal);outline-offset:2px;}
   .submit-note{text-align:center;font-size:12px;color:var(--text-dim);margin-top:14px;font-family:'Space Mono',monospace;}
   
-  /* 결과 화면 */
+  /* 결과 화면 스타일 */
   .result{display:none;text-align:center;padding:10px 6px 4px;}
   .result.show{display:block;}
   .result .big{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:var(--amber);line-height:1;margin:6px 0 2px;}
@@ -124,11 +126,11 @@
 <body>
 <div class="wrap">
 
-  <!-- 1. 과목 선택 메인 메뉴 화면 -->
+  <!-- 1. [메인 메뉴 화면] 최초 접속 시 반드시 이 화면이 먼저 나옵니다 -->
   <div class="card" id="menuScreen">
     <p class="eyebrow">Aviation Exam Select</p>
     <h1>항공 기출문제 과목 선택</h1>
-    <p class="desc">풀고자 하는 과목을 선택하세요. 응시 시 매번 보기가 무작위로 섞입니다.</p>
+    <p class="desc">풀고자 하는 과목/세트를 선택하세요. 응시 시 매번 보기가 무작위로 섞입니다.</p>
     
     <div class="menu-list">
       <!-- 항공기체 세트 1 -->
@@ -140,19 +142,19 @@
         <span class="menu-badge">25문항</span>
       </div>
 
-      <!-- 추가 과목 슬롯 (필요 시 문제 데이터를 확장하여 추가 가능) -->
+      <!-- 다른 과목 추가 슬롯 -->
       <div class="menu-item" style="opacity: 0.6; cursor: not-allowed;" onclick="alert('다른 과목 문제 파일도 올려주시면 바로 추가해드립니다!')">
         <div class="menu-info">
           <h3>항공정비 일반 / 법규 (준비 중)</h3>
-          <p>파일 업로드 시 추가 등록 가능</p>
+          <p>추가 파일 업로드 시 등록 예정</p>
         </div>
         <span class="menu-badge">대기 중</span>
       </div>
     </div>
   </div>
 
-  <!-- 2. 퀴즈 화면 (기본 숨김) -->
-  <div id="quizScreen" style="display:none;">
+  <!-- 2. [퀴즈 진행 화면] 메뉴에서 선택할 때만 나타납니다 -->
+  <div id="quizScreen">
     <div class="cluster">
       <div class="gauge">
         <svg viewBox="0 0 74 74">
