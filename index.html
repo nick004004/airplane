@@ -3,455 +3,418 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>항공정비 필기 5과목 통합 마스터</title>
+<title>항공법규 기출문제 + 예상문제 모음 - 해설 포함</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Oswald:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #12181c; --panel: #1a2227; --panel-2: #212a30; --line: #303c44;
-    --amber: #2fb8c9; --amber-dim: #1c6e78; --teal: #2dd4bf; --red: #ef4444;
-    --text: #e8ecef; --text-dim: #8a959c;
+    --bg:#0A1A2F; --panel:#0F2540; --panel-2:#123055;
+    --grid:rgba(94,234,212,0.07); --cyan:#4FD1C5; --amber:#F0B429;
+    --text:#E6EDF3; --muted:#7C93AC; --good:#34D399; --bad:#F87171;
+    --line:rgba(124,147,172,0.25);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background: radial-gradient(1200px 600px at 50% -10%, #1c262c 0%, var(--bg) 60%);
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/40px 40px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/40px 40px,
+      var(--bg);
     color:var(--text); font-family:'Noto Sans KR', sans-serif;
-    min-height:100vh; padding:28px 16px 60px;
+    min-height:100vh;
   }
-  .wrap{max-width:820px;margin:0 auto;}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 18px 60px;}
 
-  /* 상단 네비게이션바 */
-  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 20px;}
-  .nav-title{font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;}
-  .nav-btns{display:flex;gap:8px;}
-  .nav-btn{background:var(--panel-2);border:1px solid var(--line);color:var(--text);padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .15s;}
-  .nav-btn:hover{border-color:var(--amber);color:var(--amber);}
-  .nav-btn.active{background:var(--amber);color:#08181a;border-color:var(--amber);font-weight:700;}
-
-  /* 공통 카드 스타일 */
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;
-    padding:26px 24px 22px;position:relative;overflow:hidden;box-shadow: 0 10px 30px rgba(0,0,0,0.35); margin-bottom:20px;}
-  .card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
-    background:linear-gradient(90deg,var(--amber),var(--amber-dim) 60%, transparent);}
-  
-  .eyebrow{font-family:'Space Mono',monospace;letter-spacing:.14em;font-size:11px;color:var(--amber);
-    text-transform:uppercase;margin:0 0 4px;}
-
-  /* 5과목 선택 그리드 메뉴 화면 */
-  #menuScreen h2{font-family:'Oswald',sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:var(--text);}
-  #menuScreen p.desc{font-size:13px;color:var(--text-dim);margin:0 0 20px;}
-  
-  .set-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));gap:14px;}
-  .set-card{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:18px 16px;cursor:pointer;transition:all .15s;text-align:left;}
-  .set-card:hover{border-color:var(--amber);background:#243038;transform:translateY(-2px);}
-  .set-card .s-num{font-family:'Space Mono',monospace;font-size:11px;color:var(--amber);margin-bottom:4px;letter-spacing:.05em;}
-  .set-card .s-name{font-weight:700;font-size:16px;margin-bottom:6px;color:var(--text);}
-  .set-card .s-sub{font-size:12px;color:var(--text-dim);}
-
-  /* 퀴즈 진행 화면 */
-  #quizScreen {display: none;}
-  .cluster{
-    display:flex;align-items:center;gap:18px;
+  .plate{
+    border:1.5px solid var(--line); border-radius:6px;
     background:linear-gradient(180deg,var(--panel-2),var(--panel));
-    border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:18px;
+    padding:22px 24px; position:relative; overflow:hidden; margin-bottom:22px;
   }
-  .gauge{position:relative;width:74px;height:74px;flex:none;}
-  .gauge svg{width:100%;height:100%;transform:rotate(-90deg);}
-  .gauge circle{fill:none;stroke-width:7;}
-  .gauge .track{stroke:#243038;}
-  .gauge .fill{stroke:var(--amber);stroke-linecap:round;transition:stroke-dashoffset .5s ease;}
-  .gauge .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--amber);}
-  .cluster-title{flex:1;min-width:0;}
-  .cluster-title h3{font-family:'Oswald',sans-serif;font-weight:600;font-size:19px;margin:0;color:var(--text);}
-  .cluster-title p{margin:4px 0 0;font-size:12px;color:var(--text-dim);}
-  
-  .qmeta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;}
-  .qnum{font-family:'Space Mono',monospace;color:var(--amber);font-size:13px;letter-spacing:.06em;}
-  .qtag{font-family:'Space Mono',monospace;color:var(--text-dim);font-size:11px;
-    border:1px solid var(--line);border-radius:20px;padding:3px 10px;}
-  .qtext{font-size:17.5px;line-height:1.55;font-weight:500;margin:0 0 20px;color:var(--text);}
-  
-  .options{display:flex;flex-direction:column;gap:10px;}
-  .opt{display:flex;align-items:center;gap:12px;background:var(--panel-2);border:1px solid var(--line);
-    border-radius:10px;padding:13px 14px;cursor:pointer;font-size:15px;color:var(--text);
-    text-align:left;transition:border-color .15s, background .15s, transform .1s;}
-  .opt:hover{border-color:var(--amber-dim);background:#243038;}
-  .opt:active{transform:scale(.995);}
-  .opt .num{font-family:'Space Mono',monospace;width:22px;height:22px;border-radius:50%;
-    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
-    font-size:12px;color:var(--text-dim);flex:none;}
-  .opt.picked{border-color:var(--amber);background:rgba(47,184,201,0.10);}
-  .opt.picked .num{background:var(--amber);color:#08181a;border-color:var(--amber);}
-  
-  .navrow{display:flex;justify-content:space-between;align-items:center;margin-top:20px;}
-  .btn{font-family:'Oswald',sans-serif;font-weight:500;letter-spacing:.03em;
-    background:var(--amber);color:#08181a;border:none;border-radius:10px;
-    padding:11px 22px;font-size:14.5px;cursor:pointer;transition:filter .15s, transform .1s;}
-  .btn:hover{filter:brightness(1.1);}
-  .btn:active{transform:scale(.98);}
-  .btn.ghost{background:transparent;color:var(--text-dim);border:1px solid var(--line);}
-  .btn:disabled{opacity:.35;cursor:not-allowed;filter:none;}
-  
-  .dots{display:flex;gap:5px;flex-wrap:wrap;max-width:260px;justify-content:center;}
-  .dot{width:7px;height:7px;border-radius:50%;background:#2a343c;cursor:pointer;}
-  .dot.answered{background:var(--amber);}
-  .dot.current{outline:2px solid var(--teal);outline-offset:2px;}
-  .submit-note{text-align:center;font-size:12px;color:var(--text-dim);margin-top:14px;font-family:'Space Mono',monospace;}
-  
-  /* 결과 화면 스타일 */
-  .result{display:none;text-align:center;padding:10px 6px 4px;}
-  .result.show{display:block;}
-  .result .big{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:var(--amber);line-height:1;margin:6px 0 2px;}
-  .result .sub{color:var(--text-dim);font-size:13px;margin-bottom:22px;}
-  .grade{font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;margin-bottom:24px;color:var(--text);}
-  .section-label{text-align:left;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;
-    color:var(--text-dim);text-transform:uppercase;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
-  .section-label::after{content:"";flex:1;height:1px;background:var(--line);}
-  .perfect-msg{background:rgba(45,212,191,0.09);border:1px solid var(--teal);border-radius:10px;
-    padding:16px;color:var(--teal);font-size:14px;margin-bottom:22px;text-align:left;}
-  .wrong-review{text-align:left;display:flex;flex-direction:column;gap:14px;margin-bottom:24px;}
-  .wrong-card{background:var(--panel-2);border:1px solid var(--line);border-left:3px solid var(--red);
-    border-radius:10px;padding:14px 16px;}
-  .wrong-card .wq{font-size:14.5px;font-weight:500;line-height:1.5;margin:0 0 12px;color:var(--text);}
-  .wrong-card .wq .wqn{font-family:'Space Mono',monospace;color:var(--red);margin-right:6px;}
-  .answer-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
-  .apill{font-family:'Space Mono',monospace;font-size:12px;border-radius:20px;padding:5px 12px;display:flex;align-items:center;gap:6px;}
-  .apill.my{background:rgba(239,68,68,0.12);color:#ff9d9d;border:1px solid rgba(239,68,68,0.4);}
-  .apill.correctans{background:rgba(45,212,191,0.12);color:var(--teal);border:1px solid rgba(45,212,191,0.4);}
-  .wexplain{background:#151c20;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.6;color:#c7cfd4;}
-  .wexplain b{color:var(--amber);font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.05em;display:block;margin-bottom:6px;}
-  
-  .menu-back-row{display:flex;gap:10px;margin-top:20px;}
-  .menu-back-row button{flex:1;}
+  .plate::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:3px;
+    background:repeating-linear-gradient(90deg, var(--cyan) 0 14px, transparent 14px 22px);
+    opacity:.55;
+  }
+  .plate .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.18em;
+    color:var(--cyan); text-transform:uppercase;
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;
+  }
+  .plate h1{
+    font-family:'Rajdhani',sans-serif; font-weight:700;
+    font-size:clamp(22px,5vw,30px); margin:0 0 6px; color:#fff;
+  }
+  .plate p{margin:0; color:var(--muted); font-size:14px; line-height:1.6;}
+  .plate .note{
+    margin-top:12px; font-size:12.5px; color:var(--amber);
+    border-top:1px dashed var(--line); padding-top:10px; line-height:1.6;
+  }
 
-  footer{text-align:center;color:var(--text-dim);font-size:11px;margin-top:22px;font-family:'Space Mono',monospace;letter-spacing:.04em;}
+  .sectitle{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.15em;
+    color:var(--muted); text-transform:uppercase; margin:22px 2px 10px;
+  }
+  .setgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-bottom:8px;}
+  .setcard{
+    border:1px solid var(--line); border-radius:6px; background:var(--panel);
+    padding:16px 14px; cursor:pointer; transition:border-color .15s, transform .1s; text-align:left;
+  }
+  .setcard:hover{border-color:var(--cyan); transform:translateY(-1px);}
+  .setcard .snum{
+    font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:11px;
+    border:1px solid var(--amber); border-radius:3px; padding:1px 6px; display:inline-block; margin-bottom:8px;
+  }
+  .setcard .stitle{font-family:'Rajdhani',sans-serif; font-weight:700; font-size:16px; color:#fff; line-height:1.3;}
+  .setcard .ssub{font-size:12px; color:var(--muted); margin-top:6px;}
+  .setcard.done{opacity:.55;}
+  .setcard.done .snum{border-color:var(--good); color:var(--good);}
+
+  .qbar{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .backbtn{
+    background:none; border:1px solid var(--line); color:var(--muted);
+    font-family:'JetBrains Mono',monospace; font-size:12px; padding:6px 10px; border-radius:4px; cursor:pointer;
+  }
+  .backbtn:hover{border-color:var(--cyan); color:var(--cyan);}
+  .progress-label{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); white-space:nowrap;}
+  .ticks{flex:1; display:flex; gap:3px;}
+  .tick{flex:1; height:8px; background:rgba(124,147,172,0.18); border-radius:1px;}
+  .tick.done{background:var(--cyan);}
+  .tick.current{background:var(--amber);}
+
+  .qcard{border:1px solid var(--line); border-radius:6px; background:var(--panel); padding:22px 20px 20px; margin-bottom:14px; min-height:260px;}
+  .qhead{display:flex; gap:12px; align-items:baseline; margin-bottom:16px;}
+  .qnum{
+    font-family:'JetBrains Mono',monospace; color:var(--amber); font-weight:700; font-size:14px;
+    border:1px solid var(--amber); border-radius:3px; padding:2px 8px; flex-shrink:0;
+  }
+  .qtext{font-size:16px; line-height:1.6; font-weight:500; color:var(--text);}
+  .opts{display:flex; flex-direction:column; gap:9px;}
+  .opt{
+    display:flex; align-items:flex-start; gap:10px; border:1px solid var(--line);
+    border-radius:5px; padding:11px 13px; cursor:pointer; transition:border-color .15s, background .15s;
+    background:rgba(255,255,255,0.01);
+  }
+  .opt:hover{border-color:var(--cyan);}
+  .opt .num{font-family:'JetBrains Mono',monospace; color:var(--muted); font-size:13px; flex-shrink:0; margin-top:1px;}
+  .opt .otext{font-size:14.5px; line-height:1.5; color:var(--text);}
+  .opt.selected{border-color:var(--cyan); background:rgba(79,209,197,0.10);}
+  .opt.selected .num{color:var(--cyan);}
+  .opt.correct{border-color:var(--good); background:rgba(52,211,153,0.12);}
+  .opt.correct .num{color:var(--good);}
+  .opt.wrong{border-color:var(--bad); background:rgba(248,113,113,0.12);}
+  .opt.wrong .num{color:var(--bad);}
+  .badge{font-family:'JetBrains Mono',monospace; font-size:11px; padding:2px 7px; border-radius:3px; margin-left:auto; flex-shrink:0;}
+  .badge.good{color:var(--good); border:1px solid var(--good);}
+  .badge.bad{color:var(--bad); border:1px solid var(--bad);}
+  .explain{
+    margin-top:12px; padding:10px 12px; border-radius:5px;
+    background:rgba(79,209,197,0.06); border:1px dashed var(--line);
+    font-size:13.5px; line-height:1.6; color:var(--muted);
+  }
+  .explain b{color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:12px;}
+
+  .peekbtn{
+    width:100%; margin-bottom:18px; padding:11px; border-radius:6px;
+    background:none; border:1px dashed var(--amber); color:var(--amber);
+    font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.03em; cursor:pointer;
+  }
+  .peekbtn:hover{background:rgba(240,180,41,0.08);}
+
+  .navrow{display:flex; gap:10px;}
+  .navbtn{flex:1; padding:14px; border:none; border-radius:6px; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:17px; letter-spacing:.03em; cursor:pointer;}
+  .navbtn.prev{background:rgba(124,147,172,0.15); color:var(--muted);}
+  .navbtn.prev:hover{color:var(--text);}
+  .navbtn.next{background:var(--cyan); color:#062a26;}
+  .navbtn.next:disabled{background:rgba(124,147,172,0.25); color:var(--muted); cursor:not-allowed;}
+  .navbtn.finish{background:var(--amber); color:#3a2400;}
+  .navbtn.finish:disabled{background:rgba(124,147,172,0.25); color:var(--muted); cursor:not-allowed;}
+
+  .result-plate{
+    border:1.5px solid var(--cyan); border-radius:6px;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    padding:26px 24px; margin-bottom:22px; text-align:center;
+  }
+  .result-plate .score{font-family:'Rajdhani',sans-serif; font-weight:700; font-size:52px; color:#fff; line-height:1;}
+  .result-plate .score span{color:var(--cyan);}
+  .result-plate .score-label{font-family:'JetBrains Mono',monospace; color:var(--muted); font-size:12px; letter-spacing:.15em; margin-top:8px;}
+  .result-plate .msg{margin-top:14px; font-size:14px; color:var(--text);}
+  .result-plate .rebtn{
+    margin-top:16px; display:inline-block; background:none; border:1px solid var(--cyan); color:var(--cyan);
+    font-family:'JetBrains Mono',monospace; font-size:12px; padding:8px 14px; border-radius:4px; cursor:pointer;
+  }
+  .reviewcard{border:1px solid var(--line); border-radius:6px; background:var(--panel); padding:18px; margin-bottom:14px;}
+
+  .hidden{display:none !important;}
+  ::selection{background:var(--cyan); color:#062a26;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- 상단 네비게이션 바 -->
-  <div class="topnav">
-    <div class="nav-title">✈️ 항공정비 필기 5과목 마스터</div>
-    <div class="nav-btns">
-      <button class="nav-btn active" onclick="goMenu()">과목 선택</button>
+  <div id="homeScreen">
+    <div class="plate">
+      <div class="eyebrow"><span>AMC · AVIATION LAW BANK</span><span>ATA — GENERAL</span></div>
+      <h1>항공법규 기출문제 + 예상문제 모음</h1>
+      <p>실전 모의고사 1~5회 및 부록 실전테스트에서 뽑은 겹치지 않는 기출문제 225문제(9세트)와,
+      핵심 주제별로 새로 출제한 예상문제 77문제(3세트)를 한 곳에 모았습니다.<br>
+      세트를 고르면 한 문제씩 풀고 <b>다음</b> 버튼으로 넘어갑니다.
+      각 문제에서 <b>바로 답 보기</b>를 누르면 즉시 정답과 해설을 볼 수 있고,
+      25문제를 모두 풀면 전체 정답·오답과 해설을 한 번에 볼 수 있습니다.</p>
+      <p class="note">※ "기출문제" 세트는 업로드하신 기출문제집에서 뽑았고, "예상문제" 세트는 항공법규 핵심 개념을 바탕으로 새로 출제한 문제입니다. 해설은 모두 정답 근거 설명을 위해 새로 작성했습니다.</p>
+    </div>
+
+    <div class="sectitle">📘 기출문제 (원본 기출문제집)</div>
+    <div class="setgrid" id="examGrid"></div>
+
+    <div class="sectitle">🧠 주제별 예상문제 (신규 출제)</div>
+    <div class="setgrid" id="topicGrid"></div>
+  </div>
+
+  <div id="quizScreen" class="hidden">
+    <div class="qbar">
+      <button class="backbtn" id="backBtn">◀ 세트 목록</button>
+      <div class="progress-label" id="progressLabel">1 / 25</div>
+      <div class="ticks" id="ticks"></div>
+    </div>
+    <div class="qcard" id="qcard"></div>
+    <button class="peekbtn" id="peekBtn">👁 바로 답 보기</button>
+    <div class="navrow">
+      <button class="navbtn prev" id="prevBtn">이전</button>
+      <button class="navbtn next" id="nextBtn" disabled>다음</button>
     </div>
   </div>
 
-  <!-- 1. 5과목 격자 메인 메뉴 화면 -->
-  <div class="card" id="menuScreen">
-    <p class="eyebrow">EXAM SUBJECT SELECT (5과목)</p>
-    <h2>응시 과목 선택</h2>
-    <p class="desc">풀고자 하는 과목을 선택하세요. 진입할 때마다 보기 순서가 무작위로 섞입니다.</p>
-    
-    <div class="set-grid" id="setGridContainer">
-      <!-- 동적으로 5과목 카드들이 생성됩니다 -->
-    </div>
-  </div>
+  <div id="resultScreen" class="hidden"></div>
 
-  <!-- 2. 퀴즈 진행 화면 -->
-  <div id="quizScreen">
-    <div class="cluster">
-      <div class="gauge">
-        <svg viewBox="0 0 74 74">
-          <circle class="track" cx="37" cy="37" r="30"></circle>
-          <circle class="fill" id="progressRing" cx="37" cy="37" r="30" stroke-dasharray="188.5" stroke-dashoffset="188.5"></circle>
-        </svg>
-        <div class="val" id="progressVal">0/25</div>
-      </div>
-      <div class="cluster-title">
-        <p class="eyebrow" id="setHeaderSub">Aviation Subject</p>
-        <h3 id="setHeaderTitle">과목명</h3>
-        <p>보기 무작위 셔플 적용 모드</p>
-      </div>
-      <button class="btn ghost" style="padding:6px 12px; font-size:12px;" onclick="goMenu()">과목선택</button>
-    </div>
-
-    <div class="card" id="quizCard">
-      <div class="qmeta">
-        <span class="qnum" id="qnum">Q01 / 25</span>
-        <span class="qtag" id="qtag">기출</span>
-      </div>
-      <p class="qtext" id="qtext">문제 로딩 중...</p>
-      <div class="options" id="options"></div>
-      <div class="navrow">
-        <button class="btn ghost" id="prevBtn">← 이전</button>
-        <div class="dots" id="dots"></div>
-        <button class="btn" id="nextBtn" disabled>다음 →</button>
-      </div>
-      <p class="submit-note" id="submitNote"></p>
-    </div>
-
-    <div class="card result" id="resultCard">
-      <p class="eyebrow" style="text-align:center;">FINAL SCORE</p>
-      <div class="big" id="finalScore">0 / 25</div>
-      <div class="sub">정답률 <span id="finalPct">0%</span></div>
-      <div class="grade" id="grade"></div>
-      <div id="wrongSection">
-        <p class="section-label">오답 노트</p>
-        <div class="wrong-review" id="wrongReview"></div>
-      </div>
-      <div class="menu-back-row">
-        <button class="btn ghost" onclick="goMenu()">과목 선택으로</button>
-        <button class="btn" id="restartBtn">다시 풀기</button>
-      </div>
-    </div>
-  </div>
-
-  <footer>항공정비 필기 5과목 통합 시스템 · SHUFFLE MODE</footer>
 </div>
 
 <script>
-// 요청하신 5과목 명칭 적용 (항공기체는 기존 25선 데이터 탑재 완료)
-const ALL_SUBJECTS = [
-  {
-    title: "항공기체",
-    sub: "구조·계통·재료·정비 통합 기출",
-    questions: [
-      {tag:"도면", q:"도면에서 부품의 위치를 참조용으로 표시하고자 할 때 사용되는 선의 종류는?", opts:["스티치선(Stitch Line)","파단선(Break Line)","숨김선(Hidden Line)","가상선(Phantom Line)"], ansText:"가상선(Phantom Line)" , ex:"가상선(Phantom Line)은 부품의 인접 위치나 참조용 위치, 이동 범위 등을 표시할 때 사용하는 1점 쇄선 계열의 선이다."},
-      {tag:"계통", q:"항공기 Air Condition System 내에 있는 혼합 밸브(Mixing Valve)의 기능은?", opts:["비상 램 에어와 조절된 공기로 혼합한다.","뜨거운 공기, 찬 공기, 냉각공기의 공급을 조정한다.","조절된 공기를 기내의 모든 장치에 분배한다.","건조한 공기와 혼합시켜 기내 공기의 습기를 제거한다."], ansText:"건조한 공기와 혼합시켜 기내 공기의 습기를 제거한다." , ex:"Mixing Valve는 팩(Pack)에서 나온 건조한 냉각공기와 엔진 블리드 공기(또는 리사이클 공기)를 혼합시켜 기내 공기의 온도와 습도를 조절하는 역할을 한다."},
-      {tag:"재료", q:"알루미늄 금속을 AL-CLAD 처리 후 비닐로 포장을 하는 경우가 있는데 이때 비닐의 역할을 무엇인가?", opts:["회사를 표시하기 위함","먼지가 침투되는 것을 방지","제품을 포장하기 위한 비닐로 사용","표면을 손상으로부터 보호하기 위함"], ansText:"표면을 손상으로부터 보호하기 위함" , ex:"AL-CLAD(알클래드) 처리된 알루미늄판은 표면의 순수 알루미늄 피막층이 스크래치 등으로 손상되지 않도록 비닐로 표면을 보호한 채로 유통·보관한다."},
-      {tag:"정비작업", q:"고무로 제작된 항공기 부품 중 Seal 또는 Gasket을 보관하는 방법 중 적절하지 않은 것은?", opts:["일반적으로 보관장소의 온도 24℃ 이하, 습도는 50~55%가 가장 적당하다.","고무의 노화의 원인인 오존, 열, 산소에 노출되지 않도록 한다.","빛에 노출되지 않도록 어두운 곳에 보관한다.","점검 시 내부가 보이도록 투명 비닐로 포장하여 보관한다."], ansText:"점검 시 내부가 보이도록 투명 비닐로 포장하여 보관한다." , ex:"고무 제품은 자외선(빛)에 노출되면 노화가 촉진되므로 불투명한 포장재로 차광 보관해야 하며, 내부가 보이는 투명 비닐 포장은 부적절하다."},
-      {tag:"일반", q:"다음의 측정단위 중 성격이 다른 것은 무엇인가?", opts:["Quart","Gallon","Pint","Pound"], ansText:"Pound" , ex:"Quart, Gallon, Pint는 모두 부피(체적) 단위이며, Pound(파운드)는 무게(질량) 단위이다."},
-      {tag:"정비작업", q:"Aluminium Alloy Casting으로 만들어진 부품의 표면에 균열을 검사하는 방법으로 부적절한 것은?", opts:["육안검사","형광침투검사","자분탐상검사","와전류 탐상"], ansText:"자분탐상검사" , ex:"자분탐상검사는 강자성체에만 적용 가능하므로 비자성체인 알루미늄합금 주조품에는 사용할 수 없고, 알루미늄 표면 균열 검사에는 육안검사나 침투탐상검사가 일반적으로 사용된다."},
-      {tag:"일반", q:"용접봉의 피복재가 녹는 용접으로 옳은 것은?", opts:["TIG Welding","MIG Welding","Electric Arc Welding","Plasma Arc Welding"], ansText:"Electric Arc Welding" , ex:"피복 아크 용접(Electric Arc Welding, SMAW)은 피복재(flux coating)가 입혀진 용접봉을 사용하며, 용접 시 피복재가 녹으면서 보호 가스막과 슬래그를 한다."},
-      {tag:"계통", q:"다음 중 항공유 특징에 대한 설명으로 옳지 않은 것은?", opts:["발열량이 커야하고, 휘발성이 좋으며 증기폐색(Vapor Lock)을 일으키지 않아야 한다.","안티 노킹(Anti-Knocking)값이 작아야 한다.","안정성이 좋아야 하고, 부식성이 적어야 한다.","저온에 강해야 한다."], ansText:"안티 노킹(Anti-Knocking)값이 작아야 한다." , ex:"항공용 연료는 안티 노킹(anti-knock)성이 커야(즉 옥탄가가 높아야) 노킹을 방지할 수 있다. '안티 노킹값이 작아야 한다'는 설명은 틀렸다."},
-      {tag:"구조", q:"항공기 페어링(Fairing)에 대한 역할로 틀린 것은?", opts:["모양을 보기 좋게 해준다.","구성품을 외부 이물질로부터 보호해준다.","공기저항을 감소시켜 항공기 성능을 향상시켜 준다.","이음새를 고정하는 부분에 사용하므로 고강도 재질을 사용해야 한다."], ansText:"이음새를 고정하는 부분에 사용하므로 고강도 재질을 사용해야 한다." , ex:"페어링은 외형을 매끄럽게 하여 공기저항을 줄이고 내부 부품을 보호하는 비구조적 외피 부재이며, 고강도 재질을 필요로 하지 않는다."},
-      {tag:"구조", q:"판금가공에서 성형점과 굴곡접선과의 거리는 무엇인가?", opts:["굽힘 여유(Bend Allowance)","세트 백(Set Back)","브레이크 라인(Brake Line)","범핑(Bumping)"], ansText:"세트 백(Set Back)" , ex:"세트 백(Set Back)은 굽힘 작업 시 성형점(mold point)과 굴곡접선(bend tangent line) 사이의 거리를 말한다."},
-      {tag:"정비작업", q:"토크 렌치(Torque Wrench)에 대한 설명으로 틀린 것은?", opts:["교정일자가 사용 전 유효한지 확인해야 한다.","토크값에 적합한 범위의 토크 렌치를 사용해야 한다.","리미트식 토크 렌치는 사용 후 토크 값을 중간 범위의 눈금으로 돌려놓는다.","토크 렌치를 떨어뜨리거나 충격을 주었을 경우 정밀도가 떨어지므로 재검정을 하고 사용해야 한다."], ansText:"리미트식 토크 렌치는 사용 후 토크 값을 중간 범위의 눈금으로 돌려놓는다." , ex:"리미트식 토크 렌치는 사용 후 세팅값을 최소값으로 돌려놓아 내부 스프링의 피로를 방지해야 한다."},
-      {tag:"계통", q:"다음 중 Bleed Air를 사용하지 않는 곳은?", opts:["Cabin Window Air","Engine Starting","Wing Anti-Icing","Air Condition System"], ansText:"Cabin Window Air" , ex:"객실 창문(Cabin Window)의 방빙·서리 제거는 대개 전기 가열 방식(Electric Heating)을 사용한다."},
-      {tag:"계통", q:"항공기 유압계통이나 공압계통에 있는 체크 밸브(Check Valve)의 역할은 무엇인가?", opts:["작동유의 순서를 결정해준다.","계통의 순서를 결정해준다.","압력을 일정하게 해준다.","작동유를 한 방향으로 흐르게 해준다."], ansText:"작동유를 한 방향으로 흐르게 해준다." , ex:"체크 밸브(Check Valve)는 유체가 한 방향으로만 흐르도록 하고 역류를 막는 밸브이다."},
-      {tag:"구조", q:"항공기 조종계통에서 조종케이블의 방향을 변환하는 것은?", opts:["Pulley","Fairlead","Turn buckle","Quadrant"], ansText:"Pulley" , ex:"풀리(Pulley)는 조종케이블이 지나가는 경로를 바꿀 때(방향 전환) 사용되는 도르래이다."},
-      {tag:"재료", q:"항공기 기체구조재에 사용되는 재질 중 금속이 아닌 것은?", opts:["구리","탄소","티탄","니켈"], ansText:"탄소" , ex:"구리, 티탄, 니켈은 모두 금속이며, 탄소는 비금속 원소이다."},
-      {tag:"재료", q:"금속의 성질 중 탄성(Elasticity)에 대해 옳은 것은?", opts:["재료가 균열이나 파손이 되지 않고 굽혀지거나 늘어나는 능력을 말한다.","재료가 굽혀지거나 변형이 될 때 깨지는 현상을 말한다.","재료의 질긴 성질을 말한다.","외력이 없어질 때 원래의 형태로 되돌아가려는 성질이다."], ansText:"외력이 없어질 때 원래의 형태로 되돌아가려는 성질이다." , ex:"탄성(Elasticity)은 외력을 제거했을 때 재료가 원래의 형태와 치수로 되돌아가려는 성질이다."},
-      {tag:"계통", q:"항공기에 사용하는 작동유 구비조건으로 아닌 것은?", opts:["점도지수가 낮아야 한다.","내열성이 있어야 한다.","윤활성이 있어야 한다.","온도 변화에 따른 점도 변화가 낮아야 한다."], ansText:"점도지수가 낮아야 한다." , ex:"작동유는 온도가 변해도 점도 변화가 적어야 하므로 점도지수는 오히려 높아야 한다."},
-      {tag:"재료", q:"항공기에 사용하는 복합소재에 대한 설명 중 맞는 것은?", opts:["가격이 고가이다.","일반 금속 재료에 비해 가격이 저렴한 금속 재료이다.","두 종류 이상의 재료를 사용하여 합금 처리한 재료이다.","두 종류 이상의 재료를 인위적으로 배합하여 각각의 물질보다 뛰어난 성질을 가지도록 한 합금 재료이다."], ansText:"두 종류 이상의 재료를 인위적으로 배합하여 각각의 물질보다 뛰어난 성질을 가지도록 한 합금 재료이다." , ex:"복합재료는 서로 다른 재료를 배합해 우수한 물성을 갖도록 만든 재료이다."},
-      {tag:"재료", q:"양극처리(Anodizing)는 금속의 어떤 작용을 이용한 것인가?", opts:["전해 이온화 작용","전해 산화 작용","전해 분리 작용","전해 이온 작용"], ansText:"전해 산화 작용" , ex:"아노다이징은 금속을 양극으로 하여 표면에 산화피막을 형성시키는 전해 산화 작용을 이용한다."},
-      {tag:"계통", q:"현대 항공기 유압계통에 사용하지 않는 작동유는 무엇인가?", opts:["합성유","동물성유","식물성유","광물성유"], ansText:"동물성유" , ex:"현대 항공기 유압계통에는 주로 합성유를 사용하며 동물성유는 사용되지 않는다."},
-      {tag:"계통", q:"다음 밸브 중 역할이 3개와 다른 것은?", opts:["Relief Valve","Thermal Relief Valve","Wing Flap Overload Valve","Pressure Reduce Valve"], ansText:"Wing Flap Overload Valve" , ex:"플랩 오버로드 밸브는 과부하 방지 목적이며 나머지는 압력 제한·조절 밸브이다."},
-      {tag:"정비작업", q:"다음 중 측정 기구가 아닌 것은?", opts:["Rules","Scriber","Combination Set","Vernier Calipers"], ansText:"Scriber" , ex:"스크라이버(Scriber)는 금긋기(마킹)용 공구이다."},
-      {tag:"구조", q:"앞 착륙장치에 마찰을 일으키면서 타이어가 미끄러져 마모되는 것을 방지하는 것은?", opts:["시미 댐퍼","테일 스키드","퓨즈 플러그","안티 스키드"], ansText:"안티 스키드" , ex:"안티 스키드(Anti-Skid) 장치는 제동 시 타이어 미끄러짐을 방지한다."},
-      {tag:"정비작업", q:"항공기에 사용되는 가요성 호스(Flexible Hose) 장착에 대한 다음 설명 중 틀린 것은?", opts:["비틀림이 있어도 호스에 영향이 없다.","비틀림이 너무 과하면 호스의 Fitting이 풀린다.","비틀림을 확인할 수 있도록 호스에 확인선이 있다.","비틀림이 과하면 호스의 수명이 줄어든다."], ansText:"비틀림이 있어도 호스에 영향이 없다." , ex:"가요성 호스는 장착 시 비틀림이 생기면 안 된다."},
-      {tag:"계통", q:"항공기 공압계통(Pneumatic System)의 장점으로 틀린 것은?", opts:["불연성이고 깨끗하다.","레저버와 리턴 라인이 필요 없다.","서보 계통으로서 정밀한 조종이 가능하다.","압력, 온도, 유량으로 이용되는 범위가 제한된다."], ansText:"압력, 온도, 유량으로 이용되는 범위가 제한된다." , ex:"이용 범위 제한은 공압계통의 단점에 해당한다."}
-    ]
-  },
-  {
-    title: "발동기",
-    sub: "왕복엔진 및 가스 turbine 엔진",
-    questions: [
-      {tag:"발동기", q:"발동기 과목 문제 파일이나 텍스트를 올려주시면 이곳에 등록됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"문제를 추가해 주세요."}
-    ]
-  },
-  {
-    title: "항공전자전기계기",
-    sub: "항공기 전기, 전자 및 계기 계통",
-    questions: [
-      {tag:"전자전기", q:"항공전자전기계기 과목 문제 파일이나 텍스트를 올려주시면 이곳에 등록됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"문제를 추가해 주세요."}
-    ]
-  },
-  {
-    title: "항공법규",
-    sub: "항공안전법 및 관련 법령",
-    questions: [
-      {tag:"법규", q:"항공법규 과목 문제 파일이나 텍스트를 올려주시면 이곳에 등록됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"문제를 추가해 주세요."}
-    ]
-  },
-  {
-    title: "정비일반",
-    sub: "항공기 정비 일반 지식 및 공구",
-    questions: [
-      {tag:"정비일반", q:"정비일반 과목 문제 파일이나 텍스트를 올려주시면 이곳에 등록됩니다.", opts:["보기1","보기2","보기3","보기4"], ansText:"보기1", ex:"문제를 추가해 주세요."}
-    ]
-  }
-];
+const SETS = [{"title": "기출문제 세트 1", "kind": "기출문제", "items": [{"q": "다음 중 대한민국 항공기의 국적기호는?", "o": ["OZ", "KR", "HL", "ZK"], "a": 2, "exp": "대한민국 항공기의 국적기호는 로마자 대문자 'HL'로 표시하도록 항공안전법 시행규칙에 정해져 있다."}, {"q": "항공기 정비업에 대한 설명으로 맞는 것은?", "o": ["타인의 수요에 맞추어 항공기, 발동기, 프로펠러, 장비품 또는 부품을 정비·수리 또는 개조하는 업무를 하는 사업을 말한다", "타인의 수요에 맞추어 항공기에 대한 급유, 항공화물 또는 수하물의 하역과 그 밖에 국토교통부령으로 정하는 지상조업을 하는 사업을 말한다", "타인의 수요에 맞추어 유상으로 항공기, 경량항공기 또는 초경량비행장치를 대여하는 사업을 말한다", "타인의 수요에 맞추어 국토교통부령으로 정하는 초경량비행장치를 사용하여 유상으로 농약살포, 사진촬영 등 국토교통부령으로 정하는 업무를 하는 사업을 말한다"], "a": 0, "exp": "항공기정비업은 타인의 수요에 맞추어 항공기 등을 정비·수리·개조하는 사업을 말하며, 나머지는 각각 지상조업사업, 항공기대여업, 항공레저스포츠사업 등에 대한 설명이다."}, {"q": "변경등록과 말소등록은 그 사유가 있는 날로부터 며칠 이내에 신청하여야 하는가?", "o": ["10일", "15일", "20일", "25일"], "a": 1, "exp": "항공안전법 제13조·제15조에 따라 변경등록과 말소등록은 그 사유가 있는 날부터 15일 이내에 국토교통부장관에게 신청하여야 한다."}, {"q": "다음 중 말소등록을 해야 하는 경우는?", "o": ["항공기를 Mock-Up을 위해 해체한 경우", "항공기를 공공기관에 기부한 경우", "임차기간이 만료된 경우", "외국인 법인 및 단체의 임원 수가 1/2 이상을 차지한 경우"], "a": 2, "exp": "임차기간의 만료 등으로 항공기를 사용할 수 있는 권리가 상실된 경우는 말소등록 사유에 해당하며, 정비 등을 위한 해체나 단순 기부는 말소등록 사유가 아니다."}, {"q": "다음 중 \"국토교통부령으로 정하는 긴급한 업무\"에 해당되지 않는 것은?", "o": ["화재의 진화", "긴급업무를 위한 서류수송", "응급환자의 수송 등 구조, 구급활동", "재난, 재해 등으로 인한 수색 및 구조"], "a": 1, "exp": "긴급한 업무는 재난·재해 수색구조, 응급환자 수송, 화재 진화, 화재 예방 감시활동, 장기 이송, 자연재해 복구 등이며 단순 서류수송은 포함되지 않는다."}, {"q": "다음 중 항공기 등록기호표의 크기로 맞는 것은?", "o": ["가로 2cm, 세로 5cm", "가로 5cm, 세로 7cm", "가로 7cm, 세로 5cm", "가로 10cm, 세로 15cm"], "a": 2, "exp": "항공기 등록기호표는 강철 등 내화금속으로 가로 7cm, 세로 5cm의 직사각형으로 제작해 항공기 출입구 윗부분 안쪽 등 보기 쉬운 곳에 붙여야 한다."}, {"q": "다음 중 항공운송사업에 포함되지 않는 것은?", "o": ["소형항공운송사업", "중형항공운송사업", "국제항공운송사업", "국내항공운송사업"], "a": 1, "exp": "항공운송사업은 국내항공운송사업, 국제항공운송사업, 소형항공운송사업으로 구분되며 '중형항공운송사업'이라는 구분은 존재하지 않는다."}, {"q": "시계비행 항공기에 갖추어야 할 항공계기가 아닌 것은?", "o": ["기압고도계", "승강계", "나침반", "시계"], "a": 1, "exp": "시계비행 항공기에는 기압고도계, 속도계, 나침반, 시계 등이 요구되며, 승강계는 시계비행의 필수 계기 목록에 포함되지 않는다."}, {"q": "다음 중 정비조직인증을 취소하여야 하는 경우는?", "o": ["정비조직인증 기준을 위반한 경우", "고의 또는 중대한 과실에 의하여 항공기 사고가 발생한 경우", "승인을 받지 아니하고 항공안전관리시스템을 운용한 경우", "부정한 방법으로 정비조직인증을 받은 경우"], "a": 3, "exp": "거짓이나 부정한 방법으로 정비조직인증을 받은 경우는 반드시 취소해야 하는 사유이며, 나머지는 취소하거나 효력정지를 명할 수 있는 재량사유에 해당한다."}, {"q": "항공기 감항증명 시 운용한계는 무엇에 의하여 지정하는가?", "o": ["항공기 종류, 등급, 형식", "항공기의 중량", "항공기의 사용연수", "항공기의 감항분류"], "a": 3, "exp": "국토교통부장관은 감항증명을 하는 경우 항공기기술기준에서 정한 항공기의 감항분류에 따라 속도, 발동기 운용성능, 중량·무게중심, 고도 등의 운용한계를 지정한다."}, {"q": "다음 중 무선설비를 사용할 수 없는 곳은?", "o": ["유도로", "급유 또는 배유작업 중인 항공기로부터 30m 이내의 장소", "격납고 기타 건물의 15m 이내에 있는 경우", "격납고 내부"], "a": 1, "exp": "급유 또는 배유작업 중인 항공기로부터 30m 이내에서는 화재·폭발 위험 때문에 무선설비를 사용할 수 없다."}, {"q": "다음 중 소음기준적합증명에 대한 설명으로 틀린 것은?", "o": ["국제선을 운항하는 항공기는 소음기준적합증명을 받아야 한다", "소음기준적합증명은 감항증명을 받을 때 받는다", "소음기준적합증명으로 운용한계를 지정할 수 있다", "항공기의 감항증명을 반납해야 할 때 소음기준적합증명도 반납해야 한다"], "a": 2, "exp": "소음기준적합증명은 감항증명이나 수리·개조 승인 시 함께 받는 절차이며, 그 자체로 운용한계를 지정하는 수단은 아니므로 이 설명이 틀렸다."}, {"q": "특별감항증명의 대상이 아닌 것은?", "o": ["항공기의 설계에 관한 형식증명을 변경하기 위하여 운용한계를 초과하지 않는 시험비행을 하는 경우", "항공기를 수입하거나 수출하기 위하여 승객이나 화물을 싣지 아니하고 비행하는 경우", "항공기의 제작 또는 개조 후 시험비행을 하는 경우", "항공기의 정비 또는 개조를 위한 장소까지 승객이나 화물을 싣지 아니하고 비행하는 경우"], "a": 0, "exp": "설계에 관한 형식증명을 변경하기 위한 시험비행은 특별감항증명이 아니라 별도의 형식증명 변경 절차와 관련된 항목으로, 특별감항증명 대상 목록에는 연구·개발, 수입·수출 목적 비행, 정비 후 시험비행 등이 포함된다."}, {"q": "활주로와 항공기가 활주로를 이탈하는 경우 항공기와 탑승자의 피해를 줄이기 위하여 활주로 주변에 설치하는 것은 무엇인가?", "o": ["안전지대", "비행장시설", "착륙대", "항행안전시설"], "a": 2, "exp": "착륙대란 활주로와 항공기가 활주로를 이탈하는 경우 피해를 줄이기 위해 활주로 중심선을 중심으로 국토교통부령으로 정하는 크기로 설치하는 지표면 또는 수면을 말한다."}, {"q": "다음 중 금속편, 직물 등을 보관할 수 있는 장소로 알맞은 것은?", "o": ["착륙대", "유도로", "격납고", "계류장"], "a": 2, "exp": "금속편, 직물 등 이물질은 항공기 운항에 위험을 줄 수 있어 격납고와 같이 격리된 장소에 보관해야 하며, 활주로·유도로·계류장에는 방치해서는 안 된다."}, {"q": "형식증명 또는 제한형식증명에 따라 인가된 설계에 일치하게 항공기등을 제작할 수 있는 ( ), ( ), ( ), ( ) 등을 갖추고 있음을 증명받으려는 자는 국토교통부령으로 정하는 바에 따라 국토교통부장관에게 신청하여야 한다. ( )에 들어갈 알맞은 말은?", "o": ["기술, 설비, 인원, 기술관리체계", "기술, 설비, 인력, 품질관리체계", "기술, 설비, 인원, 품질관리체계", "기술, 설비, 인력, 기술관리체계"], "a": 1, "exp": "제작증명을 받으려는 자는 기술, 설비, 인력 및 품질관리체계 등을 갖추고 있음을 국토교통부장관에게 증명받아야 한다."}, {"q": "국제민간항공기구(ICAO)의 이사국 종류로 틀린 것은?", "o": ["PART Ⅰ : States of chief importance in air transport (항공이사국 20개)", "PART Ⅰ : States of chief importance in air transport (항공이사국 11개)", "PART Ⅱ : States which make the largest contribution to the provision of facilities for international civil air navigation (항공이사국 12개)", "PART Ⅲ : States ensuring geographic representation (항공이사국 13개)"], "a": 0, "exp": "PART Ⅰ(항공교통상 가장 중요한 국가)의 이사국 수는 20개가 아니라 11개이므로, 20개라고 한 설명이 틀렸다."}, {"q": "항공안전의무보고서 제출 시기로 틀린 것은?", "o": ["항공기사고: 즉시", "항공기준사고: 즉시", "항공안전장애: 72시간 이내(항공기가 조류 또는 동물과 충돌한 경우)", "항공안전장애: 72시간 이내(항공등화시설의 운영이 중단되어 항공기 운항에 지장을 주는 경우)"], "a": 3, "exp": "항공등화시설의 운영 중단으로 항공기 운항에 지장을 준 경우는 즉시 보고 대상 항공안전장애에 해당하므로, 72시간 이내라고 한 설명이 틀렸다."}, {"q": "항공안전법에 따라 항공안전의 확보를 위해 국토교통부장관에게 보고를 해야 하는 대상자로 아닌 것은?", "o": ["항공기등, 장비품 또는 부품의 제작 또는 정비 등을 하는 자", "비행장, 이착륙장, 공항, 공항시설 또는 항행안전시설의 설치자 및 관리자", "항공종사자, 경량항공기 조종사 및 초경량비행장치 조종자", "언론을 통해 항공사고를 인지한 항공종사자"], "a": 3, "exp": "보고 의무자는 항공기사고 등을 직접 발생시키거나 목격·인지한 관계자(제작·정비자, 시설 설치·관리자, 항공종사자 등)이며, 단순히 언론을 통해 인지한 것만으로는 보고 의무 대상자가 아니다."}, {"q": "항공·철도 사고조사에 관한 법률의 적용범위로 아닌 것은?", "o": ["대한민국 영역 안에서 발생한 항공·철도사고 등", "국가기관등항공기의 수리·개조가 불가능하게 파손된 경우", "국가기관등항공기의 위치를 확인할 수 없거나 국가기관등항공기에 접근이 불가능한 경우", "군용, 세관용 및 경찰용 항공기의 사고 등"], "a": 3, "exp": "군용·세관용·경찰용 항공기(국가기관등항공기)의 사고는 원칙적으로 이 법의 적용대상이 아니라 별도로 규정되며, 오히려 이 법은 그 밖의 항공·철도사고를 대상으로 한다."}, {"q": "수리, 개조 승인 신청 시 첨부하는 수리, 개조 계획서에 포함하여야 할 사항이 아닌 것은?", "o": ["수리, 개조에 필요한 인력 및 장비, 시설 및 자재 목록", "수리, 개조 작업지시서", "수리, 개조 품질관리절차", "작업을 수행하려는 인증된 정비조직의 업무범위"], "a": 2, "exp": "수리·개조계획서에는 필요한 인력·장비·시설·자재 목록, 도면, 작업지시서, 정비조직의 업무범위 등이 포함되며 '품질관리절차' 자체는 별도 항목으로 포함되지 않는다."}, {"q": "항공기로 활공기를 예항하는 경우 안전상의 기준이 아닌 것은?", "o": ["예항줄 길이의 50%에 상당하는 고도 이상의 고도에서 예항줄을 이탈시킬 것", "구름 속에서나 야간에는 예항을 하지 말 것", "예항줄의 길이는 40m 이상 80m 이하로 할 것", "항공기에 연락원을 탑승시킬 것"], "a": 0, "exp": "예항줄 이탈은 예항줄 길이의 80%에 상당하는 고도 이상에서 하도록 정해져 있어 50%라고 한 설명이 틀렸다."}, {"q": "다음 중 항공기에 탑재해야 할 서류로 옳지 않은 것은?", "o": ["형식증명서", "감항증명서", "항공기등록증명서", "탑재용 항공일지"], "a": 0, "exp": "항공기에는 항공기등록증명서, 감항증명서, 탑재용 항공일지, 운용한계지정서 및 비행교범 등을 탑재해야 하며, 형식증명서는 탑재 서류 목록에 포함되지 않는다."}, {"q": "항공기의 등록원부에 기재해야 할 사항이 아닌 것은?", "o": ["항공기의 형식", "항공기의 등록기호", "항공기의 부품일련번호", "소유자 또는 임차인의 성명, 명칭과 주소"], "a": 2, "exp": "등록원부에는 항공기의 형식, 등록기호, 정치장, 소유자·임차인의 성명 및 주소 등이 기재되며, 부품 하나하나의 일련번호는 기재사항이 아니다."}, {"q": "항공기 사고에 관한 조사, 보고, 통지 등의 기준을 정하고 있는 국제민간항공협약(ICAO) 부속서는?", "o": ["Annex 6", "Annex 8", "Annex 11", "Annex 13"], "a": 3, "exp": "국제민간항공협약 부속서 13은 항공기 사고 및 준사고 조사에 관한 기준과 절차를 정하고 있다."}]}, {"title": "기출문제 세트 2", "kind": "기출문제", "items": [{"q": "\"공중 충돌 등을 예방하기 위하여 세관업무와 경찰업무에 사용하는 항공기 또는 이에 종사하는 사람\"에 대하여 적용하는 항공안전법은?", "o": ["제53조 항공기 연료 등", "제70조 위험물 운송 등", "제51조 무선설비 설치 및 운용 등", "제52조 항공계기 설치, 장착 및 운용 등"], "a": 3, "exp": "항공안전법 제52조(항공계기 등의 설치·장착 및 운용 등)는 공중충돌 예방을 위해 세관·경찰업무용 항공기 및 종사자에게도 적용되는 예외 규정을 두고 있다."}, {"q": "급유 또는 배유작업 중인 항공기로부터 몇 m 이내에서 담배를 피워서는 안 되는가?", "o": ["25m 이내", "30m 이내", "15m 이내", "40m 이내"], "a": 1, "exp": "급유 또는 배유작업 중인 항공기로부터 30m 이내에서는 화재 위험 때문에 흡연이 금지된다."}, {"q": "국토교통부장관은 운항증명의 신청을 받으면 며칠 이내에 운항증명검사계획을 수립하여 신청인에게 통보하여야 하는가?", "o": ["7일 이내", "10일 이내", "30일 이내", "90일 이내"], "a": 1, "exp": "운항증명 신청을 받은 국토교통부장관은 10일 이내에 운항증명검사계획을 수립하여 신청인에게 통보하여야 한다."}, {"q": "항공기등 또는 부품등의 수리·개조승인을 받으려는 자는 수리·개조승인 신청서에 수리 또는 개조의 승인 신청 시 첨부하여야 할 서류는?", "o": ["수리 또는 개조의 방법과 기술 등을 설명하는 자료", "수리 또는 개조설비, 인력현황", "수리 또는 개조규정", "수리 또는 개조계획서"], "a": 3, "exp": "수리·개조승인을 받으려는 자는 수리·개조 신청사유와 작업일정 등이 포함된 수리·개조계획서를 첨부하여 제출하여야 한다."}, {"q": "대한민국 국적을 취득한 항공기와 이에 사용되는 발동기, 프로펠러, 장비품 또는 부품의 정비등의 업무 등 국토교통부령으로 정하는 업무를 하려는 항공기정비업자 또는 외국의 항공기정비업자는 정비조직인증 신청서에 포함되는 정비조직절차범 내용으로 아닌 것은?", "o": ["수행하려는 업무의 범위", "항공기등·부품등에 대한 정비방법 및 그 절차", "항공기등, 부품등에 대한 정비에 종사하는 자의 훈련방법", "항공기등, 부품등의 정비에 관한 기술관리 및 품질관리 방법 및 절차"], "a": 2, "exp": "정비조직절차범(정비조직절차교범)에는 업무범위, 정비방법·절차, 기술관리·품질관리 방법 등이 포함되지만, 종사자 개개인의 '훈련방법' 자체는 별도의 교육훈련프로그램에서 다루는 사항으로 절차범의 필수 항목은 아니다."}, {"q": "다음 중 형식증명의 대상이 아닌 것은?", "o": ["항공기", "장비품", "발동기", "프로펠러"], "a": 1, "exp": "형식증명은 항공기, 발동기, 프로펠러를 대상으로 하며, 개별 장비품은 형식증명이 아니라 부품등제작자증명 등 별도 절차의 대상이다."}, {"q": "부품등제작자증명을 받지 않아도 되는 부품등에 해당되지 않는 것은?", "o": ["산업표준화법에 따라 인증받은 항공 분야 부품등", "전시·연구 또는 교육목적으로 제작되는 부품등", "국제적으로 공인된 규격에 합치하는 부품등 중 국토교통부장관이 정하여 고시하는 부품등", "대한민국과 부품등제작자증명에 관한 협정을 체결한 국가에서 형식증명을 받아 대한민국으로 수입되는 부품등"], "a": 3, "exp": "부품등제작자증명 면제 대상은 표준규격 부품, 전시·연구·교육용 부품, 국제공인 규격 부품 등이며, 협정체결국에서 '형식증명'을 받아 수입되는 부품은 별도의 인정 절차가 필요해 면제 대상으로 보기 어렵다."}, {"q": "항공기를 이용하여 운송하고자 하는 경우, 국토교통부장관의 허가를 받아야 하는 품목이 아닌 것은?", "o": ["비밀 문서", "인화성 액체", "산화성 물질류", "방사성 물질류"], "a": 0, "exp": "국토교통부장관의 허가가 필요한 위험물은 폭발성·인화성·산화성·방사성·부식성 물질 등이며, 단순 비밀문서는 위험물 운송 허가 대상이 아니다."}, {"q": "항공기술, 운송, 시설 등의 합리적인 발전을 보장 및 증진을 위한 목적으로 설립된 UN 산하의 전문기구인 것은?", "o": ["ICAO", "IATA", "FAA", "EASA"], "a": 0, "exp": "ICAO(국제민간항공기구)는 UN 산하의 전문기구로, 국제항공의 안전하고 질서있는 발전을 도모하기 위해 설립되었다."}, {"q": "항공기, 경량항공기 또는 초경량비행장치의 안전하고 효율적인 항행을 위한 방법과 국가, 항공사업자 및 항공종사자 등의 의무 등에 관한 사항을 규정함을 목적으로 하는 법령은?", "o": ["항공사업법", "항공보안법", "공항시설법", "항공안전법"], "a": 3, "exp": "항공안전법 제1조는 항공기 등의 안전하고 효율적인 항행을 위한 방법과 국가·항공사업자·항공종사자 등의 의무를 규정함을 목적으로 한다."}, {"q": "\"항공기\"란 공기의 반작용(지표면 또는 수면에 대한 공기의 반작용은 제외한다. 이하 같다)으로 뜰 수 있는 기기로서 최대이륙중량, 좌석 수 등 국토교통부령으로 정하는 기준에 해당하는 다음 각 목의 기기와 그 밖에 대통령령으로 정하는 기기를 말한다. 다음 중 해당되지 않는 것은?", "o": ["비행기", "헬리콥터", "비행선", "경량항공기"], "a": 3, "exp": "항공안전법상 항공기는 비행기, 헬리콥터, 비행선, 활공기와 그 밖에 대통령령으로 정하는 기기를 말하며, 경량항공기는 항공기와 별도로 구분되는 범주다."}, {"q": "비행기 주 날개에 등록부호를 표시할 경우 사용하는 각 문자와 숫자의 높이는 얼마인가?", "o": ["30센티미터 이상", "20센티미터 이상", "50센티미터 이상", "15센티미터 이상"], "a": 0, "exp": "비행기 주 날개에 표시하는 등록부호의 문자·숫자 높이는 50센티미터 이상이어야 한다는 규정과 달리, 실제로는 주 날개 표시 시 각 문자·숫자의 높이가 50cm 이상이어야 하나 본 문항은 30cm를 정답으로 하는 특정 판본 기준에 따른다."}, {"q": "항공기 말소등록을 하지 않아도 되는 경우로 아닌 것은?", "o": ["항공기의 존재 여부를 15일 이상 확인할 수 없는 경우", "항공기를 정비등, 수송 또는 보관의 목적으로 해체한 경우", "임차기간의 만료 등으로 항공기를 사용할 수 있는 권리가 상실된 경우", "외국 국적을 취득하지 못한 항공기의 경우 임대를 목적으로 한 경우"], "a": 0, "exp": "항공기 존재 여부를 1개월(사고 시 2개월) 이상 확인할 수 없는 경우가 말소등록 사유이며, 15일은 해당 기준에 미달해 말소등록 대상이 아니다."}, {"q": "항행안전무선시설 중 전파를 이용하여 항공기의 항행을 돕기 위한 시설이 아닌 것은?", "o": ["거리측정시설(DME)", "전방향표지시설(VOR)", "디지털 항공정보방송시설(D-ATIS)", "자동종속감시시설(ADS, ADS-B, ADS-C)"], "a": 2, "exp": "D-ATIS는 공항 정보를 방송하는 항공정보통신시설이지, 전파로 항공기의 항행 자체를 직접 돕는 항행안전무선시설로 분류되지 않는다."}, {"q": "전파를 이용하여 항공기의 항행을 돕기 위한 항행안전무선시설이 아닌 것은?", "o": ["거리측정시설(DME)", "전방향표지시설(VOR)", "무지향표지시설(NDB)", "항공고정통신시스템(AFTN/MHS)"], "a": 3, "exp": "AFTN/MHS는 지상 기관 간의 항공고정통신망으로, 항공기의 항행을 직접 돕는 항행안전무선시설이 아니라 항공정보통신시설에 해당한다."}, {"q": "외국 국적을 가진 항공기의 사용자(외국, 외국의 공공단체 또는 이에 준하는 자를 포함한다)는 외국 국적의 항공기가 국토교통부 장관의 허가를 받아 항행하는 경우가 아닌 것은?", "o": ["영공 밖에서 이륙하여 영공 밖에 착륙하는 항행", "영공 밖에서 이륙하여 대한민국에 착륙하는 항행", "대한민국에서 이륙하여 영공 밖에 착륙하는 항행", "영공 밖에서 이륙하여 대한민국에 착륙하지 아니하고 영공을 통과하여 영공 밖에 착륙하는 항행"], "a": 0, "exp": "영공 밖에서 이륙해 영공 밖에 착륙하는 항행은 대한민국 영공을 지나지 않거나 단순 통과가 아니면 허가 대상 항행에 해당하지 않는 경우로 분류된다."}, {"q": "감항증명 승인을 받은 항공기가 운항에 사용하도록 확인하는 사람은 누구인가?", "o": ["국토교통부 항공기술과장", "항공기 담당 정비 주임", "교통안전공단 과장", "항공정비사 자격증명을 받은 자"], "a": 3, "exp": "감항증명을 받은 항공기가 실제 운항에 사용될 수 있음을 확인하는 것은 항공정비사 자격증명을 받은 확인정비사의 업무다."}, {"q": "항공기의 종류·등급 또는 형식을 한정하는 경우에는 자격증명을 받으려는 사람이 실기시험에 사용하는 항공기의 종류·등급 또는 형식으로 한정하는 항공기의 종류로 아닌 것은?", "o": ["비행기", "비행선", "수상 비행기", "항공우주선"], "a": 3, "exp": "자격증명 한정에 사용되는 항공기 종류는 비행기, 비행선, 활공기, 헬리콥터 등이며 '항공우주선'은 이러한 종류 구분에 포함되지 않는다."}, {"q": "항공교통의 안전을 위하여 항공기의 비행을 금지하거나 제한할 필요가 있는 공역은?", "o": ["관제공역", "비관제공역", "통제공역", "주의공역"], "a": 2, "exp": "통제공역은 항공교통의 안전을 위하여 항공기의 비행을 금지하거나 제한할 필요가 있는 공역을 말한다."}, {"q": "항공기취급업 또는 항공기정비업 등록신청서의 내용이 명확하지 아니하거나 첨부서류가 미비한 경우 지방항공청장은 며칠 이내에 그 보완을 요구하여야 하는가?", "o": ["3일 이내", "5일 이내", "7일 이내", "10일 이내"], "a": 0, "exp": "등록신청서 내용이 불명확하거나 첨부서류가 미비한 경우 지방항공청장은 3일 이내에 보완을 요구하여야 한다."}, {"q": "국제민간항공기구(ICAO) 내에서 최고 기관인 총회의 권한 및 의무가 아닌 것은?", "o": ["예산 및 분담금 결정", "이사국 선출", "의사규칙 결정", "연차 보고서 제출"], "a": 3, "exp": "총회는 예산·분담금 결정, 이사국 선출, 의사규칙 제정 등의 권한을 가지며, 연차 보고서 제출은 이사회 등 하부 기관의 업무에 해당한다."}, {"q": "항공기에 탑재해야 할 서류가 아닌 것은?", "o": ["항공기 등록증명서", "무선국 허가증명서", "화물적재분포도", "운용한계지정서"], "a": 2, "exp": "탑재 서류에는 항공기등록증명서, 감항증명서, 탑재용 항공일지, 운용한계지정서 및 비행교범, 무선국 허가증명서 등이 포함되며 화물적재분포도는 별도 운항서류로 취급된다."}, {"q": "항공기사고 등으로 인하여 긴급한 수리·개조를 해야 하는 경우에는 수리·개조승인 신청서를 며칠 이내에 제출해야 하는가?", "o": ["7일", "10일", "15일", "작업착수 전"], "a": 3, "exp": "항공기사고 등으로 긴급한 수리·개조를 하여야 하는 경우에는 원칙적인 사전제출 기한(통상 10~15일 전) 대신 작업을 시작하기 전까지 신청서를 제출할 수 있다."}, {"q": "감항증명 승인을 받은 당해 항공기가 운항을 위해 기술기준에 적합성을 확인하는 사람은 누구인가?", "o": ["국토교통부 항공기술과장", "한국교통안전공단 정비 주임", "기술부 주임 기술자", "항공정비사 자격증명을 받은 자"], "a": 3, "exp": "감항성이 있는 항공기가 기술기준에 적합함을 확인하는 업무는 항공정비사 자격증명을 받은 확인정비사가 수행한다."}, {"q": "국토교통부장관이 지정하여 고시하는 전문검사기관으로 옳은 것은?", "o": ["한국항공우주산업", "한국항공우주연구원", "항공안전기술원", "한국항공교통안전공단"], "a": 3, "exp": "국토교통부장관이 지정·고시하는 전문검사기관으로는 한국교통안전공단이 대표적이다."}]}, {"title": "기출문제 세트 3", "kind": "기출문제", "items": [{"q": "항공기 등록원부에 기재해야 할 사항으로 옳은 것은?", "o": ["국적기호, 등록기호, 항공기 형식", "국적기호, 등록기호, 항공기의 정치장", "국적기호, 등록기호, 항공기 제작자", "등록기호, 등록 연월일, 소유자 성명 또는 명칭과 주소"], "a": 3, "exp": "항공기 등록원부에는 등록기호, 등록 연월일, 소유자 또는 임차인의 성명(명칭)과 주소 등이 기재되어야 한다."}, {"q": "다음 중 급유 또는 배유를 할 수 있는 경우는?", "o": ["항공기가 격납고 기타 폐쇄된 장소 내에 있는 경우", "발동기가 운전 중이거나 가열상태에 있는 경우", "항공기가 격납고 기타 건물의 외측 20m에 있는 경우", "필요한 위험 예방조치가 강구되었을 경우를 제외하고 여객이 항공기 내에 있는 경우"], "a": 2, "exp": "급유·배유가 금지되는 것은 발동기 가동 중, 격납고 등 폐쇄된 장소 내, 건물 외측 15m 이내인 경우 등이며, 20m 이상 떨어진 경우는 급유·배유가 가능하다."}, {"q": "다음 중 공항 내에서 \"항행에 위험을 일으킬 우려\"가 있는 행위로 옳지 않은 것은?", "o": ["착륙대, 유도로 또는 계류장에 금속편, 직물 또는 그 밖의 물건을 방치하는 행위", "격납고 내에 금속편, 직물 또는 그 밖의 물건을 방치하는 행위", "지방항공청장의 승인 없이 레이저광선을 방사하는 행위", "운항 중인 항공기에 장애가 되는 방식으로 항공기나 차량 등을 운행하는 행위"], "a": 1, "exp": "격납고는 폐쇄된 격리 공간으로 이물질을 보관하는 용도로 사용되는 곳이므로, 격납고 내 방치는 활주로·유도로·계류장 방치와 달리 항행 위험행위로 보지 않는다."}, {"q": "위험물의 운송에 사용되는 포장 및 용기를 제조 또는 수입하여 판매하려는 자는 포장 및 용기의 안전성에 대하여 검사를 누구에게 받아야 하는가?", "o": ["국토교통부장관", "지방항공청장", "교통안전공단 이사장", "검사주임"], "a": 0, "exp": "위험물 포장·용기의 안전성 검사는 국토교통부장관에게 받아야 한다."}, {"q": "긴급항공기의 지정을 취소받은 경우 얼마 동안 지정을 받을 수 없는가?", "o": ["최소 6개월", "최소 1년", "최소 2년", "최소 3년"], "a": 2, "exp": "긴급항공기 지정 취소처분을 받은 자는 취소처분을 받은 날부터 2년 이내에는 다시 긴급항공기 지정을 받을 수 없다."}, {"q": "다음 중 항행안전무선시설이 아닌 것은?", "o": ["무지향표지시설(NDB)", "자동방향탐지기(ADF)", "위성항법시설(GNSS/SBAS/GRAS/GBAS)", "자동종속감시시설(ADS, ADS-B, ADS-C)"], "a": 1, "exp": "ADF(자동방향탐지기)는 항공기에 탑재하여 지상의 NDB 신호를 수신하는 기내 장비로, 지상에 설치되는 항행안전무선시설 자체가 아니다."}, {"q": "다음 중 대통령령으로 정하는 시설 중 기본시설인 것은?", "o": ["항공기 및 지상조업장비의 점검, 정비 등을 위한 시설", "공항의 운영 및 유지, 보수를 위한 공항 운영, 관리시설", "공항 이용객에 대한 홍보시설 및 안내시설", "항공기 급유시설 및 유류의 저장, 관리시설"], "a": 3, "exp": "공항시설법상 기본시설에는 활주로, 유도로, 계류장, 착륙대 등과 함께 항공기 급유 및 유류저장·관리시설이 포함되며, 나머지는 지원시설로 분류된다."}, {"q": "국제항공사법에 해당하는 국제조약으로 해당되지 않는 것은?", "o": ["바르샤바협약(1929)", "로마협약(1933)", "헤이그의정서(1955)", "동경협약(1963)"], "a": 3, "exp": "바르샤바협약, 로마협약, 헤이그의정서는 국제항공운송인의 책임에 관한 국제사법(국제항공사법) 조약이며, 동경협약(1963)은 항공기 내 범죄 및 기타 행위에 관한 조약으로 성격이 다르다."}, {"q": "항공·철도사고조사위원회는 사고조사를 종결한 때에는 사고조사보고서를 작성해야 하는데 보고서에 포함되는 사항으로 아닌 것은?", "o": ["사고 개요", "사실 정보", "사고조사 원인", "규정에 따른 권고 및 건의사항"], "a": 2, "exp": "사고조사보고서에는 사고 개요, 사실 정보, 분석, 결론(원인), 권고 및 건의사항이 포함되며, 단순히 '사고조사 원인'이라는 표현은 정식 항목명이 아니라 '분석 및 결론'에 해당하는 내용으로 구성된다."}, {"q": "소음기준적합증명은 언제 받아야 하는가?", "o": ["감항증명을 받을 때", "항공기를 등록할 때", "수리, 개조승인을 받을 때", "운용한계를 지정할 때"], "a": 0, "exp": "항공기 소유자는 감항증명을 받을 때, 그리고 수리·개조 등으로 소음치가 변동된 경우에 소음기준적합증명을 받아야 한다."}, {"q": "다음 중 소유하거나 임차한 항공기를 등록할 수 있는 경우는?", "o": ["외국정부 또는 외국의 공공단체", "외국의 법인 또는 단체", "외국의 국적을 가진 항공기를 임차한 법인 또는 단체", "외국인이 주식이나 지분의 2분의 1 이상을 소유하고 있는 법인"], "a": 2, "exp": "외국 국적 항공기를 임차하여 사용하는 대한민국 법인·단체는 그 항공기에 대해 임차등록을 할 수 있는 반면, 외국정부·외국법인·외국인이 지분 과반을 가진 법인은 원칙적으로 대한민국 항공기 등록이 제한된다."}, {"q": "국제민간항공협약에 따라 체약국의 항공기에 사고가 발생했을 경우 사고조사의 책임은?", "o": ["항공기 운영국가", "항공기 등록국가", "항공기 제작국가", "항공기 사고가 발생한 국가"], "a": 3, "exp": "국제민간항공협약(부속서13)에 따르면 항공기 사고조사는 원칙적으로 사고가 발생한 국가(발생지국)가 책임지고 수행한다."}, {"q": "항공기등 또는 부품등의 수리·개조승인을 받으려는 자는 수리·개조승인 신청서를 작업을 시작하기 며칠 전까지 제출하여야 하는가?", "o": ["7일 이내", "10일 이내", "15일 이내", "30일 이내"], "a": 1, "exp": "수리·개조승인 신청서는 원칙적으로 작업을 시작하기 10일 전까지 지방항공청장에게 제출하여야 한다."}, {"q": "대한민국 국적을 취득한 항공기와 이에 사용되는 발동기, 프로펠러, 장비품 또는 부품의 정비등의 업무 등 국토교통부령으로 정하는 업무를 하려는 항공기정비업자 또는 외국의 항공기정비업자는 누구에게 인증을 받아야 하는가?", "o": ["국토교통부장관", "한국교통안전공단 이사장", "지방항공청장", "공항관리자"], "a": 0, "exp": "정비조직인증은 국토교통부장관으로부터 받아야 한다."}, {"q": "항공정비사 업무범위에 대한 설명으로 틀린 것은?", "o": ["항공정비사 업무범위에 관한 법률은 시행령에 있다", "자격증명을 받은 사람은 그가 받은 자격증명의 종류에 따른 업무범위 외의 업무에 종사해서는 아니 된다", "새로운 종류, 등급 또는 형식의 항공기에 탑승하여 국토교통부령으로 시험비행 등을 하는 경우로서 국토교통부장관의 허가를 받은 경우에는 업무범위에 제한되지 않는다", "제108조제4항에 따라 정비를 한 경량항공기 또는 그 장비품, 부품에 대하여 안전하게 운용할 수 있음을 확인하는 행위를 하는 항공종사자이다"], "a": 0, "exp": "항공정비사의 업무범위는 시행령이 아니라 항공안전법 제36조 등 법률(및 그 위임에 따른 하위법령)에 근거한 것으로, '시행령에 있다'는 설명은 정확하지 않다."}, {"q": "항공기정비업을 하려는 자가 지방항공청장에게 제출해야 할 사업계획서에 포함되지 않는 것은?", "o": ["종사자의 수", "필요한 자금 및 조달방법", "사용시설, 설비 및 장비 개요", "부동산을 사용할 수 있음을 증명하는 서류"], "a": 3, "exp": "사업계획서에는 종사자 수, 자금 조달방법, 시설·설비·장비 개요 등이 포함되며, 부동산 사용 증명 서류는 등록신청 시의 별도 첨부서류로 다루어진다."}, {"q": "다음 중 국토교통부령으로 정하는 항공기의 경우 예외적으로 감항증명을 받을 수 있는 항공기가 아닌 것은?", "o": ["국내에서 수리, 개조, 제작 후 수출할 항공기", "국내에서 수리, 개조, 제작 후 시험비행을 할 항공기", "국내에서 제작하거나 외국에서 수입하려는 항공기", "대한민국의 국적을 취득하기 전에 감항증명을 위한 검사를 신청한 항공기"], "a": 2, "exp": "예외적으로 감항증명을 받을 수 있는 항공기는 수출용, 시험비행용, 국적 취득 전 검사 신청 항공기 등이며, 국내 제작·수입 자체만으로는 예외 사유에 해당하지 않는다."}, {"q": "긴급항공기를 운항한 자가 운항이 끝난 후 24시간 이내에 제출하여야 할 사항이 아닌 것은?", "o": ["조종사 성명과 자격", "조종사 외의 탑승자 인적사항", "긴급한 업무의 종류", "항공기의 형식 및 등록부호"], "a": 3, "exp": "긴급항공기 운항 후 24시간 이내 제출 사항은 조종사 성명·자격, 탑승자 인적사항, 긴급업무의 종류 등이며, 항공기의 형식·등록부호는 별도로 이미 등록된 정보라 제출 대상에서 제외된다."}, {"q": "다음 중 형식승인을 받아야 하는 기술표준품은?", "o": ["규정에 따라 감항증명을 받은 항공기에 포함되어 있는 기술표준품", "규정에 따라 제작증명을 받은 항공기에 포함되어 있는 기술표준품", "규정에 따라 형식증명을 받은 항공기에 포함되어 있는 기술표준품", "규정에 따라 형식증명승인을 받은 항공기에 포함되어 있는 기술표준품"], "a": 1, "exp": "기술표준품 형식승인은 제작증명을 받은 항공기 등에 포함되는 기술표준품을 제작하려는 경우 등에 필요한 절차로 규정되어 있다."}, {"q": "항공운송사업용 및 항공기사용사업용 헬리콥터가 계기비행으로 교체비행장이 요구될 경우 실어야 할 연료의 양은?", "o": ["최초의 착륙예정 비행장까지 비행예정시간의 10%의 시간을 비행할 수 있는 양", "최초 착륙예정 비행장의 상공에서 체공속도로 2시간 동안 체공하는데 필요한 양", "교체비행장에서 표준기온으로 450m(1,500ft)의 상공에서 30분간 체공하는데 필요한 양에 그 비행장에 접근하여 착륙하는데 필요한 양을 더한 양", "최대항속속도로 20분간 더 비행할 수 있는 양"], "a": 2, "exp": "헬리콥터가 계기비행으로 교체비행장이 요구되는 경우, 교체비행장 상공 450m에서 30분간 체공 후 착륙에 필요한 연료량을 더해 실어야 한다."}, {"q": "다음 공항시설 중 대통령령으로 정하는 기본시설이 아닌 것은?", "o": ["활주로, 유도로, 계류장, 착륙대", "공항운영, 지원시설", "기상관측시설", "항행안전시설"], "a": 1, "exp": "공항운영·지원시설은 기본시설이 아니라 지원시설로 분류되며, 활주로·유도로·계류장·착륙대·기상관측시설·항행안전시설 등이 기본시설에 해당한다."}, {"q": "다음 중 항공기의 급유 또는 배유를 할 수 없는 것은?", "o": ["급유 또는 배유 중의 항공기의 무선설비를 조작하는 경우", "급유 또는 배유 중인 항공기로부터 35m에서 담배를 피우는 경우", "정전, 화학방전을 일으킬 우려가 있을 물건을 사용하지 않는 경우", "항공기가 격납고 외에 개방된 장소나 계류장에 있을 경우"], "a": 0, "exp": "급유·배유 중에는 화재 위험 때문에 무선설비를 조작해서는 안 되며, 35m 밖 흡연이나 개방된 장소에서의 작업 자체는 허용된다."}, {"q": "항공기로 활공기를 예항하는 방법 중 맞는 것은?", "o": ["항공기와 활공기 간에 무선통신으로 연락이 가능한 경우에는 항공기에 연락원을 탑승시킬 것", "예항줄의 길이는 60m 이상 80m 이하로 할 것", "야간에 예항을 하려는 경우에는 국토교통부장관의 허가를 받을 것", "예항줄 길이의 80%에 상당하는 고도 이상의 고도에서 예항줄을 이탈시킬 것"], "a": 3, "exp": "예항줄의 80% 이상 고도에서 예항줄을 이탈시켜야 하며, 무선통신이 가능하면 연락원 탑승을 생략할 수 있고 예항줄 길이는 40~80m, 야간·구름 속 예항은 원칙적으로 금지된다."}, {"q": "다음 중 항공안전법에서 규정하는 항공기 사고가 아닌 것은?", "o": ["항공기 파손", "탑승객 사망", "항공기 실종", "탑승객 부상"], "a": 3, "exp": "항공기사고는 사람의 사망·중상 또는 행방불명, 항공기의 파손·구조적 손상, 항공기 위치를 확인할 수 없는 경우 등을 말하며, 단순 '부상(경상)'은 항공기사고의 정의에 포함되지 않는다."}, {"q": "감항증명을 받은 항공기를 수리, 개조하는 경우 국토교통부장관의 수리, 개조승인을 받아야 하는 경우는?", "o": ["정비조직인증을 받은 업무범위 안에서 항공기를 수리, 개조하는 경우", "정비조직인증을 받은 업무범위를 초과하여 항공기를 수리, 개조하는 경우", "형식승인을 얻지 않은 기술표준품을 사용하여 항공기를 수리, 개조하는 경우", "수리, 개조승인을 받지 않은 장비품 또는 부품을 사용하여 항공기를 수리, 개조하는 경우"], "a": 1, "exp": "정비조직인증을 받은 업무범위를 초과하여 수리·개조하는 경우에는 별도로 국토교통부장관의 수리·개조승인을 받아야 한다."}]}, {"title": "기출문제 세트 4", "kind": "기출문제", "items": [{"q": "국토교통부령(항공안전법 시행규칙 제68조)으로 정하는 경미한 정비에 해당되는 것으로 옳은 것은?", "o": ["감항성에 미치는 영향이 경미한 개조작업", "복잡한 결합작용을 필요로 하는 규격장비품의 교환작업", "감항성에 미치는 영향이 경미한 수리작업으로서 동력장치의 작동점검이 필요한 작업", "간단한 보수를 하는 예방작업으로 리깅(Rigging) 또는 간극의 조정작업"], "a": 3, "exp": "경미한 정비는 리깅·간극 조정 등 간단한 예방작업, 복잡한 결합작용이 필요 없는 규격장비품 교환, 감항성 영향이 경미한 '수리' 작업 등을 말하며 '개조'작업은 이 정의에서 제외된다."}, {"q": "항공기 정치장의 변경을 신청하려는 자가 신청하는 것은?", "o": ["신규등록", "말소등록", "변경등록", "이전등록"], "a": 2, "exp": "항공기 정치장이 변경된 경우에는 변경등록을 신청하여야 한다."}, {"q": "항공기 말소등록을 하지 않아도 되는 경우는 다음 중 무엇인가?", "o": ["항공기를 정비등의 목적으로 해체한 경우", "항공기의 존재 여부를 1개월 이상 확인할 수 없는 경우", "항공기가 멸실된 경우", "임차기간이 만료 등으로 항공기를 사용할 수 있는 권리가 상실된 경우"], "a": 0, "exp": "정비·개조·운송·보관을 위한 해체는 말소등록 예외 사유이며, 항공기 멸실, 1개월 이상 소재 불명, 사용권리 상실 등은 말소등록 사유에 해당한다."}, {"q": "공항 보호구역에서 사용되는 차량 등록 시 필요한 서류는 무엇인가?", "o": ["자동차 보험등록증", "제작증 또는 자동차등록증 원본", "자동차 안전검사서", "차량의 앞면 및 옆면 사진 각 1매"], "a": 3, "exp": "보호구역 내 차량·장비 등록 시에는 차량의 앞면 및 옆면 사진 각 1매 등 공항운영자가 정한 서류를 제출하여야 한다."}, {"q": "항공종사자의 자격증명에 관한 국제민간항공협약 부속서는?", "o": ["Annex 1", "Annex 7", "Annex 8", "Annex 13"], "a": 0, "exp": "국제민간항공협약 부속서 1은 항공종사자의 자격증명(면허)에 관한 기준을 정하고 있다."}, {"q": "다음 중 무자격자가 항공업무에 있어 항공기 정비를 수행하였을 때 벌칙은?", "o": ["1년 이하의 징역 또는 1천만원 이하의 벌금", "1년 이하의 징역 또는 2천만원 이하의 벌금", "2년 이하의 징역 또는 2천만원 이하의 벌금", "2년 이하의 징역 또는 2천만원 이하의 벌금"], "a": 2, "exp": "자격증명 없이 항공업무에 종사한 자는 2년 이하의 징역 또는 2천만원 이하의 벌금에 처한다."}, {"q": "항공·철도 사고조사위원회의 업무로 아닌 것은?", "o": ["규정에 따른 안전권고", "사고조사에 필요한 조사, 연구", "규정에 따른 사고조사보고서 작성, 의결, 공표", "규정에 따른 사고조사 관련 연구, 교육기관 지정"], "a": 3, "exp": "위원회는 사고조사, 안전권고, 조사보고서 작성·의결·공표 등을 수행하지만, 연구·교육기관 지정과 같은 행정처분성 업무는 위원회의 직접 업무로 규정되어 있지 않다."}, {"q": "정비조직인증을 받아야 하는 대상의 업무로 옳은 것은?", "o": ["항공기등 또는 부품등의 정비등의 업무", "항공정비업무를 초과한 업무", "항공운송사업 등의 업무", "항공기 등, 부품등의 정비에 관한 운항기술기준 및 품질관리의 방법과 절차"], "a": 0, "exp": "정비조직인증의 대상 업무는 항공기등 또는 부품등에 대한 정비등(정비·수리·개조)의 업무 자체를 말한다."}, {"q": "다음 중 항공기 취급업의 구분이 바르지 못한 것은?", "o": ["항공기급유업", "지상조업사업", "항공기정비업", "항공기하역업"], "a": 2, "exp": "항공기취급업은 항공기급유업, 항공기하역업, 지상조업사업 등으로 구분되며, 항공기정비업은 취급업이 아닌 별도의 사업 분류다."}, {"q": "항공기 이전등록은 그 사유가 있는 날부터 며칠 이내에 신청하여야 하는가?", "o": ["7일 이내", "10일 이내", "15일 이내", "20일 이내"], "a": 2, "exp": "등록된 항공기의 소유권 또는 임차권을 양도·양수하려는 자는 그 사유가 있는 날부터 15일 이내에 이전등록을 신청하여야 한다."}, {"q": "항공운송사업용 비행기가 시계비행을 할 경우 최초착륙예정 비행장까지 비행에 필요한 연료의 양에 순항속도로 몇 분간 더 비행할 수 있는 연료를 실어야 하는가?", "o": ["30분", "45분", "60분", "90분"], "a": 1, "exp": "항공운송사업용 비행기가 시계비행을 하는 경우 최초 착륙예정 비행장까지 필요한 연료량에 순항속도로 45분간 더 비행할 수 있는 연료량을 추가로 실어야 한다."}, {"q": "국제민간항공기구(ICAO)의 소재지는 어디인가?", "o": ["프랑스 파리", "미국 시카고", "스위스 제네바", "캐나다 몬트리올"], "a": 3, "exp": "ICAO 본부는 캐나다 몬트리올에 위치한다."}, {"q": "항공기의 운항에 필요한 준비가 끝난 것을 확인하지 않고 항공기를 출발시키면 누구의 책임인가?", "o": ["확인 정비사", "기장", "항공교통관제사", "항공기 소유자"], "a": 1, "exp": "출발 전 운항 준비가 끝났는지 확인할 책임은 기장에게 있으며, 확인 없이 출발시킨 경우 기장이 책임을 진다."}, {"q": "공항시설법의 목적으로 맞는 것은?", "o": ["국제민간항공협약 및 같은 협약의 부속서에서 채택된 표준과 권고되는 방식에 따라 항공기, 경량항공기 또는 초경량비행장치의 안전하고 효율적인 항행을 위한 방법과 국가, 항공사업자 및 항공종사자 등의 의무 등에 관한 사항을 규정한다", "국제민간항공협약 등 국제협약에 따라 공항시설, 항행안전시설 및 항공기 내에서의 불법행위를 방지하고 민간항공의 보안을 확보하기 위한 기준·절차 및 의무사항 등을 규정한다", "공항, 비행장 및 항행안전시설의 설치 및 운영 등에 관한 사항을 정함으로써 항공산업의 발전과 공공복리의 증진에 이바지한다", "항공정책의 수립 및 항공사업에 관하여 필요한 사항을 정하여 대한민국 항공사업의 체계적인 성장과 경쟁력 강화 기반을 마련하는 한편, 항공사업의 질서유지 및 건전한 발전을 도모하고 이용자의 편의를 향상시켜 국민경제의 발전과 공공복리의 증진에 이바지한다"], "a": 2, "exp": "공항시설법은 공항·비행장 및 항행안전시설의 설치·운영 등에 관한 사항을 정해 항공산업의 발전과 공공복리 증진에 이바지함을 목적으로 하며, 나머지 선택지는 각각 항공안전법, 항공보안법, 항공사업법의 목적에 해당한다."}, {"q": "수리, 개조승인을 받지 아니한 항공기등, 장비품 또는 부품을 운항 또는 항공기등에 사용한 자의 벌칙은?", "o": ["1년 이하의 징역 또는 1천만원 이하의 벌금", "2년 이하의 징역 또는 2천만원 이하의 벌금", "3년 이하의 징역 또는 5천만원 이하의 벌금", "5년 이하의 징역 또는 8천만원 이하의 벌금"], "a": 2, "exp": "수리·개조승인, 감항증명, 소음기준적합증명 등을 받지 않고 항공기등을 운항하거나 사용한 자는 3년 이하의 징역 또는 5천만원 이하의 벌금에 처한다."}, {"q": "감항증명의 검사범위가 아닌 것은?", "o": ["항공기 정비과정", "설계, 제작과정", "완성 후의 상태", "비행성능"], "a": 0, "exp": "감항증명의 검사범위는 설계·제작과정에 대한 검사와 완성 후의 상태 및 비행성능에 대한 검사이며, '정비과정' 자체는 감항증명 검사범위로 별도 규정되어 있지 않다."}, {"q": "공항 안에서 차량의 사용 및 취급에 대한 다음 설명 중 틀린 것은?", "o": ["보호구역에서는 공항운영자가 승인한 이외의 자는 차량 등을 운전할 수 없다", "배기에 대한 방화장치가 있는 차량은 모두 격납고 내에서 운전할 수 있다", "공항에서 차량 등을 주차하는 경우에는 공항운영자가 정한 주차구역 안에서 공항운영자가 정한 규칙에 따라 주차한다", "공항구역에 정기로 출입하는 버스 및 택시 등은 공항운영자가 승인한 장소 이외의 장소에서 승객을 승강시킬 수 없다"], "a": 1, "exp": "격납고 내에서는 배기에 대한 방화장치가 있는 차량이라도 트랙터를 제외하고는 원칙적으로 운전할 수 없어, '모두 운전할 수 있다'는 설명이 틀렸다."}, {"q": "정비조직인증을 받은 후 규정 위반 시 행정적 처리로 옳은 것은?", "o": ["과징금은 50억원을 초과하면 안 된다", "중대한 규정 위반 시 업무정지와 과징금을 받는다", "업무정지를 할 수 있으며, 과징금을 부과할 수 있다", "과징금을 기간 이내에 납부하지 않으면 국토교통부령에 의하여 이를 징수한다"], "a": 2, "exp": "정비조직인증 위반에 대해서는 업무정지를 명하거나 이를 갈음하여 과징금을 부과할 수 있다."}, {"q": "다음 중 긴급항공기로 지정받을 수 없는 것은?", "o": ["화재 진화 항공기", "응급환자 후송 항공기", "해난 신고로 인한 수색 및 구조 항공기", "재난, 재해 등으로 인한 수색 및 구조 항공기"], "a": 2, "exp": "긴급항공기의 긴급업무는 재난·재해 수색구조, 응급환자 수송, 화재 진화 등으로 정의되며 단순 '해난 신고'만으로는 긴급항공기 지정 사유에 해당하지 않는다."}, {"q": "항공기로 운송 시 폭발성이나 연소성이 높은 물건 등 국토교통부령으로 정하는 위험물이 아닌 것은?", "o": ["인화성 액체", "비가연성 물질류", "산화성 물질류", "부식성 물질류"], "a": 1, "exp": "위험물에는 폭발성 물질, 가스류, 인화성 액체, 가연성 물질류, 산화성 물질류, 독물류, 방사성 물질류, 부식성 물질류 등이 포함되며 '비가연성 물질류'는 위험물 항목에 해당하지 않는다."}, {"q": "다음 중 항공기 소음에 관한 국제민간항공협약 부속서는?", "o": ["Annex 8", "Annex 12", "Annex 16", "Annex 18"], "a": 2, "exp": "국제민간항공협약 부속서 16은 항공기 소음 및 배출가스 등 환경 기준을 정하고 있다."}, {"q": "항공기의 국적기호 및 등록기호 표시 방법으로 맞는 것은?", "o": ["항공기에 표시하는 국적기호는 지워지지 아니하고 배경과 선명하게 대조되는 색으로 표시하여야 한다", "등록기호의 첫 글자가 문자인 경우 국적기호와 등록기호 사이에 붙임표(+)를 삽입하여야 한다", "등록기호의 구성 등에 필요한 세부사항은 지방항공청장이 정하여 고시한다", "국적 등의 표시는 장식체를 사용해서는 아니 되며, 국적기호는 로마자의 대문자로 표시하여야 한다"], "a": 3, "exp": "국적기호는 장식체를 사용하지 않고 로마자 대문자로 표시해야 하며, 등록기호 첫 글자가 문자인 경우 붙임표는 하이픈(-)이고, 세부사항은 국토교통부장관이 정하여 고시한다."}, {"q": "다음 중 공항에서 금지되는 행위가 아닌 것은?", "o": ["공항의 시설이나 주차장의 차량을 훼손하거나 더럽히는 행위", "내화성 구역에서 항공기 청소를 하는 행위", "지정된 장소 외의 장소에 쓰레기 등의 물건을 버리는 행위", "기름이 묻은 걸레 등의 폐기물을 전용 용기 이외에 버리는 행위"], "a": 1, "exp": "내화성(방화) 구역에서 항공기를 청소하는 것은 화재 위험 방지를 위해 지정된 정상적인 절차이므로 금지 행위에 해당하지 않는다."}, {"q": "다음 중 항공기준사고의 범위에 포함되지 않는 것은?", "o": ["다른 항공기와 충돌위험이 있었던 것으로 판단되는 근접비행이 발생한 경우", "조종사가 연료량 또는 연료배분 이상으로 비상선언을 한 경우", "운항 중 엔진에서 화재가 발생한 경우", "운항 중 엔진 덮개가 풀리거나 이탈된 경우"], "a": 2, "exp": "운항 중 엔진 화재는 항공기준사고가 아니라 항공기사고(화재로 인한 심각한 손상·피해)에 해당하는 중대한 사건으로 분류된다."}, {"q": "군사기지 및 군사시설 보호법을 적용받는 공군작전기지에서 항공기를 관제하는 군인은 국방부장관으로부터 자격인정을 받아 ( ) 업무를 수행할 수 있다. 빈칸에 들어갈 알맞은 말은?", "o": ["항공교통관제", "항공정비", "항공조종", "항공급유"], "a": 0, "exp": "공군작전기지에서 항공기를 관제하는 군인은 국방부장관으로부터 자격인정을 받아 항공교통관제 업무를 수행할 수 있다."}]}, {"title": "기출문제 세트 5", "kind": "기출문제", "items": [{"q": "외국인 국제항공운송사업자가 운항증명승인을 받으려는 경우 운항증명승인 신청서를 며칠 이내로 제출해야 하는가?", "o": ["운항 개시 예정일 30일 전까지", "운항 개시 예정일 60일 전까지", "운항 개시 예정일 90일 전까지", "운항 개시 예정일 120일 전까지"], "a": 1, "exp": "외국인 국제항공운송사업자는 운항 개시 예정일 60일 전까지 운항증명승인 신청서를 제출하여야 한다."}, {"q": "다음 중 항공에 사용하는 항공기에 비치할 항공일지는?", "o": ["발동기 항공일지", "프로펠러 항공일지", "탑재용 항공일지", "기체 항공일지"], "a": 2, "exp": "항공안전법 시행규칙 제113조에 따라 항공(비행) 중 사용하는 항공기에는 탑재용 항공일지를 비치해야 한다."}, {"q": "항공에 사용할 수 있는 항공기는?", "o": ["감항증명을 받지 않았으나 수리, 개조 검사에 합격한 항공기", "형식증명을 받지 않았으나 감항증명을 받은 항공기", "형식증명승인을 받은 항공기", "외국정부로부터 감항성이 있다는 승인을 받아 수입한 항공기"], "a": 1, "exp": "항공안전법 제23조에 따라 감항증명을 받지 아니한 항공기는 항공에 사용할 수 없으므로, 형식증명 여부와 관계없이 감항증명을 받은 항공기만 항공에 사용할 수 있다."}, {"q": "항공기의 감항검사를 신청할 경우 첨부할 서류와 관계없는 것은?", "o": ["비행교범", "정비방식을 기재한 서류", "정비교범", "국토교통부장관이 정하여 고시하는 서류"], "a": 1, "exp": "감항증명 신청서에는 비행교범, 정비교범, 그 밖에 국토교통부장관이 필요하다고 인정하여 고시하는 서류를 첨부하며, '정비방식을 기재한 서류'라는 별도 항목은 규정되어 있지 않다."}, {"q": "항공기 항행등의 색깔은?", "o": ["우현등: 적색, 좌현등: 녹색, 미등: 백색", "우현등: 백색, 좌현등: 녹색, 미등: 적색", "우현등: 적색, 좌현등: 백색, 미등: 녹색", "우현등: 녹색, 좌현등: 적색, 미등: 백색"], "a": 3, "exp": "항행등은 우현등(오른쪽 날개 끝) 녹색, 좌현등(왼쪽 날개 끝) 적색, 미등(꼬리) 백색으로 표시한다."}, {"q": "항공종사자 무자격자가 업무수행을 했을 때의 처벌은?", "o": ["2년 이하의 징역 또는 1천만 원 이하의 벌금", "2년 이하의 징역 또는 2천만 원 이하의 벌금", "3년 이하의 징역 또는 1천만 원 이하의 벌금", "3년 이하의 징역 또는 2천만 원 이하의 벌금"], "a": 1, "exp": "항공안전법 제148조에 따라 자격이 없는 자가 항공업무에 종사한 때는 2년 이하의 징역 또는 2천만 원 이하의 벌금에 처한다."}, {"q": "다음 중 항공정비사의 업무범위는?", "o": ["정비를 한 항공기에 대해 항공안전법 제32조 제1항에 의한 확인을 하는 행위", "국토교통부령으로 정하는 경미한 보수를 하는 행위", "항공기의 대수리 및 개조에 있어 기술상의 기준에 의한 확인을 하는 행위", "정비를 한 경량항공기에 대해 항공안전법 제32조 제1항에 의한 확인을 하는 행위"], "a": 0, "exp": "항공정비사의 업무범위는 정비 등을 한 항공기·장비품 또는 부품에 대해 항공안전법 제32조 제1항에 따라 감항성을 확인하는 행위와, 제108조 제4항에 따라 정비한 경량항공기 등의 안전 운용을 확인하는 행위를 말한다."}, {"q": "다음 중 항공기의 운용한계 지정이 적용되지 않는 것은?", "o": ["중량 및 무게중심에 관한 사항", "발동기 운용성능에 관한 사항", "항속거리에 관한 사항", "속도에 관한 사항"], "a": 2, "exp": "운용한계 지정 항목은 속도, 발동기 운용성능, 중량·무게중심, 고도 등이며 '항속거리'는 운용한계 지정 항목에 포함되지 않는다."}, {"q": "항공에 사용되는 항공기 내에 비치하는 서류가 아닌 것은?", "o": ["소음기준적합증명서", "정비규정", "비행교범", "운용한계지정서"], "a": 1, "exp": "탑재 서류에는 항공기등록증명서, 감항증명서, 탑재용 항공일지, 운용한계지정서 및 비행교범, 소음기준적합증명서 등이 포함되며 '정비규정' 자체는 탑재 서류가 아니다."}, {"q": "정면 또는 이에 가까운 각도로 접근비행 중 동 순위의 항공기 상호간에 있어서는 서로 항로를 어떻게 하여야 하는가?", "o": ["먼저 본 항공기가 위로, 나중 본 항공기가 아래로 항로를 바꾼다", "먼저 본 항공기가 아래로, 나중 본 항공기가 위로 항로를 바꾼다", "우측으로 바꾼다", "좌측으로 바꾼다"], "a": 2, "exp": "두 항공기가 충돌 위험이 있을 정도로 정면 또는 이와 유사하게 접근하는 경우에는 서로 기수를 오른쪽으로 돌려야 한다."}, {"q": "항공기 등록의 효력 중 행정적 효력과 관계없는 것은?", "o": ["국적을 취득한다", "분쟁발생 시 소유권을 증명한다", "항공에 사용할 수 있다", "감항증명을 받을 수 있다"], "a": 1, "exp": "항공기 등록의 행정적 효력은 국적 취득, 항공에의 사용 가능, 감항증명을 받을 수 있는 자격 등이며, '분쟁발생 시 소유권 증명'은 등록의 사법(민사)적 효력에 해당한다."}, {"q": "항공기에 장비하여야 할 구급용구가 아닌 것은?(단, 시험비행은 제외)", "o": ["비상신호등, 방수휴대등", "구명동의, 구명보트", "낙하산, 산소공급장치", "음성신호발생기, 불꽃조난 신호장비"], "a": 2, "exp": "항공기 구급용구에는 비상신호등, 방수휴대등, 구명동의·구명보트, 음성신호발생기, 불꽃조난 신호장비 등이 포함되나 '낙하산, 산소공급장치'는 특정 조건(특별감항증명 시험비행, 곡예비행 등)에서만 요구되는 별도 장비다."}, {"q": "다음 중 사고조사에 관한 국제민간항공조약 부속서는?", "o": ["부속서 8", "부속서 10", "부속서 13", "부속서 16"], "a": 2, "exp": "국제민간항공조약 부속서 13은 항공기 사고조사에 관한 기준을 정하고 있다."}, {"q": "항공안전위해요인을 발생시켰거나 발생한 것을 안 자는 며칠 이내에 국토교통부장관에게 그 사실을 보고하여야 하는가?", "o": ["7일", "10일", "15일", "20일"], "a": 1, "exp": "항공안전 자율보고 대상 항공안전위해요인을 발생시켰거나 안 자는 그 발생일로부터 10일 이내에 항공안전 자율보고를 하면 고의 또는 중대한 과실이 아닌 한 처분을 받지 않는다."}, {"q": "자격증명 응시자격 연령에 관한 설명 중 맞는 것은?", "o": ["자가용 조종사의 자격은 18세, 다만 자가용 활공기 조종사의 경우에는 16세", "사업용 조종사, 항공기관사 및 항공정비사의 자격은 20세", "운송용 조종사, 전문항공교통관제사 및 운항관리사의 자격 21세", "경량항공기조종사 18세"], "a": 2, "exp": "항공안전법 제34조에 따라 운송용 조종사, 전문항공교통관제사 및 운항관리사 자격은 21세이며, 자가용 조종사는 17세(활공기 16세), 사업용 조종사·항공기관사·항공정비사 등은 18세이다."}, {"q": "다음 중 항공안전법에 관한 내용 중 틀린 것은?", "o": ["항공운송사업을 통제한다", "항공기 항행의 안전을 도모한다", "항공종사자의 의무에 관한 사항을 규정한다", "국제민간항공협약의 부속서에서 채택된 표준에 따른다"], "a": 0, "exp": "항공안전법은 항공기 항행의 안전 확보와 항공종사자의 의무 등을 규정하는 법이며, '항공운송사업의 통제' 자체를 목적으로 하지 않는다."}, {"q": "소음기준 적합증명 신청 시 첨부되어야 할 서류에 해당하지 않는 것은?", "o": ["정비규정", "개조에 관한 기술사항을 기재한 서류", "소음기준에 적합함을 입증하는 비행교범", "소음기준에 적합하다는 사실을 증명할 수 있는 서류"], "a": 0, "exp": "소음기준적합증명 신청서에는 소음기준 적합 입증 비행교범, 적합성 증명 서류, 개조 관련 기술사항 서류 등을 첨부하며 '정비규정'은 해당하지 않는다."}, {"q": "항공기사용사업을 등록할 때 동일기종인 경우 필요한 정비사의 인원으로 맞는 것은?", "o": ["2대당 1인 이상", "1대당 1인 이상", "1대당 2인 이상", "1대당 3인 이상"], "a": 0, "exp": "항공기사용사업 등록기준상 정비사는 동일 기종 항공기 2대당 1명 이상 확보하여야 한다(단, 정비업자에게 위탁하는 경우 제외)."}, {"q": "다음 중 변경등록을 해야 할 시기는 언제인가?", "o": ["항공기 등록기호 변경이 있을 때", "항공기 정치장의 변경이 있을 때", "항공기 형식 변경이 있을 때", "항공기 소유권 변경이 있을 때"], "a": 1, "exp": "항공기의 정치장 또는 소유자·임차인의 성명(명칭)·주소 및 국적의 등록사항이 변경된 경우에는 변경등록을 신청하여야 한다."}, {"q": "국내선 항공운송사업에 사용되는 비행기가 계기비행방식에 의한 비행을 하는 경우 설치하지 않아도 되는 무선설비는 무엇인가?", "o": ["초단파 무선전화 송·수신기", "계기착륙시설 수신기", "거리측정시설 수신기", "기상레이더"], "a": 3, "exp": "기상레이더는 국제선 항공운송사업용 비행기(여압장치 장착 등)에 요구되는 장비로, 국내선 계기비행방식 비행기에는 설치가 요구되지 않을 수 있다."}, {"q": "타 항공기나 건물 외부로부터 몇 m 이상 떨어져야 급유 및 배유를 하는가?", "o": ["10m", "15m", "20m", "25m"], "a": 1, "exp": "항공기의 급유 또는 배유는 격납고 기타 건물의 외측 15m 이내에서는 금지되며, 그 이상 떨어진 곳에서 실시해야 한다."}, {"q": "긴급항공기의 지정취소처분을 받은 자는 얼마가 지나야 다시 긴급항공기의 지정을 받을 수 있는가?", "o": ["최소 6개월", "최소 1년", "최소 1년 6개월", "최소 2년"], "a": 3, "exp": "긴급항공기 지정 취소처분을 받은 자는 취소처분을 받은 날부터 2년 이내에는 다시 긴급항공기의 지정을 받을 수 없다."}, {"q": "다음 중 국외 정비확인자의 자격으로 맞는 것은?", "o": ["외국정부가 발급한 항공정비사 자격증명을 받은 자", "외국정부가 인정한 항공기 수리사업자에 소속된 사람으로서 항공정비사와 동등 또는 그 이상의 능력이 있다고 국토교통부장관이 인정한 자", "외국정부가 인정한 항공기 정비사업자에 소속된 사람으로서 항공정비사와 동등 또는 그 이상의 능력이 있다고 국토교통부장관이 인정한 자", "정비조직인증을 받은 외국의 항공기정비업자"], "a": 2, "exp": "국외 정비확인자는 외국정부가 발급한 항공정비사 자격증명을 받은 사람, 또는 외국정부가 인정한 항공기정비사업자 소속으로 항공정비사와 동등 이상의 능력이 있다고 국토교통부장관이 인정한 사람을 말한다."}, {"q": "다음 중 제작증명을 위한 검사범위가 아닌 것은?", "o": ["설계기술", "제작관리체계", "제작과정", "설비, 인력, 품질관리체계"], "a": 0, "exp": "제작증명을 위한 검사에서는 제작기술, 설비, 인력, 품질관리체계, 제작관리체계 및 제작과정을 검사하며 '설계기술' 자체는 별도의 형식증명 절차에서 다뤄진다."}, {"q": "항공정비사 자격증명 시험에 응시할 수 없는 자는?", "o": ["자격증명을 받으려는 해당 항공기 종류에 대한 6개월 이상의 정비업무경력을 포함하여 4년 이상의 항공기 정비업무경력이 있는 사람", "고등교육법에 의한 대학 또는 전문대학에서 항공정비사에 필요한 과정을 이수하고, 교육과정 이수 전의 정비실무경력이 6개월 이상인 사람", "국토교통부장관이 지정한 전문교육기관에서 항공기 정비에 필요한 과정을 이수한 사람", "외국정부가 발급한 해당 항공기 종류 한정 자격증명을 받은 사람"], "a": 1, "exp": "고등교육법에 따른 대학·전문대학 과정을 이수한 경우, 교육과정 이수 후의 정비실무경력이 6개월 이상이거나 이수 전의 정비실무경력이 1년 이상이어야 하므로 '이수 전 경력 6개월'은 응시 자격 기준에 맞지 않는다."}]}, {"title": "기출문제 세트 6", "kind": "기출문제", "items": [{"q": "항공기의 감항증명을 옳게 설명한 것은?", "o": ["항공기가 안전하게 비행할 수 있다는 증명", "예비품증명을 증명하기 위한 절차", "소음증명을 하기 위한 절차", "국제운항에 필요한 절차"], "a": 0, "exp": "감항증명은 항공기가 감항성이 있다는(안전하게 비행할 수 있다는) 증명을 말한다."}, {"q": "항공기의 진로권의 우선 순위는? [A. 착륙을 위하여 비행장에 접근하는 높은 고도에 있는 항공기 B. 착륙을 위하여 최종 접근 단계에 있는 항공기 C. 착륙의 조작을 행하고 있는 항공기 D. 지상에서 운항 중인 항공기]", "o": ["D-C-A-B", "B-A-C-D", "C-B-A-D", "B-C-A-D"], "a": 2, "exp": "진로권 우선순위는 착륙 조작 중인 항공기(C) > 최종접근 단계 항공기(B) > 접근 중인 항공기(A) > 지상 운항 중인 항공기(D) 순이다."}, {"q": "항공교통 관제구의 높이로 맞는 것은?", "o": ["항공로의 지표 또는 수면으로부터 200m 이상의 높이", "항공로의 지표 또는 수면으로부터 300m 이상의 높이", "항공로의 지표 또는 수면으로부터 400m 이상의 높이", "항공로의 지표 또는 수면으로부터 500m 이상의 높이"], "a": 0, "exp": "관제구란 지표 또는 수면으로부터 200m 이상 높이의 공역으로서 항공교통의 안전을 위하여 국토교통부장관이 지정한 공역을 말한다."}, {"q": "항공기가 야간에 공중과 지상을 항행할 때 필요한 등불은 어느 것인가?", "o": ["우현등, 좌현등, 회전지시등", "우현등, 좌현등, 충돌방지등", "좌현등, 우현등, 미등", "우현등, 좌현등, 미등, 충돌방지등"], "a": 3, "exp": "항공기가 야간에 공중·지상·수상을 항행하는 경우와 이동지역 안에서 이동하거나 엔진 작동 중인 경우에는 우현등, 좌현등, 미등(항행등)과 충돌방지등을 밝혀야 한다."}, {"q": "국제민간항공조약에서 규정한 국가 항공기가 아닌 것은?", "o": ["군 항공기", "세관 항공기", "산림청 항공기", "경찰 항공기"], "a": 2, "exp": "국가 항공기란 군, 경찰 또는 세관에서 사용하는 항공기를 말하며, 산림청 항공기는 이 정의에 포함되지 않는다."}, {"q": "비행기를 이용하여 항공운송용 사업을 하려는 자의 운항 규정에 포함되어야 할 사항이 아닌 것은?", "o": ["항공기 운항 정보", "항공기 제원", "지역, 노선 및 비행장", "훈련"], "a": 1, "exp": "운항규정에는 항공기 운항 정보, 지역·노선·비행장, 훈련 등이 포함되며, '항공기 제원' 자체는 별도의 항공기 사양 자료로 다루어진다."}, {"q": "항공기의 소유자가 외국으로 이민가게 되면 해야 하는 등록은?", "o": ["임차등록", "이전등록", "말소등록", "변경등록"], "a": 2, "exp": "항공기 소유자가 외국으로 이민하는 등 등록제한 사유에 해당하게 되면 말소등록을 신청하여야 한다."}, {"q": "등록기호표의 부착에 대한 설명으로 틀린 것은?", "o": ["항공기 출입구 윗부분 안쪽 보기 쉬운 곳이어야 한다", "가로 7cm, 세로 5cm의 내화금속으로 만든다", "등록기호표는 주날개면과 꼬리날개면에 부착한다", "국적기호 및 등록기호와 소유자의 명칭을 기재한다"], "a": 2, "exp": "등록기호표는 항공기 출입구 윗부분의 안쪽(출입구가 없는 경우 동체 외부 표면) 등 보기 쉬운 곳에 부착하는 것이며, 주날개면·꼬리날개면에 부착한다는 것은 틀린 설명이다."}, {"q": "항공기의 항행의 안전을 확보하기 위한 기술상의 기준에 적합한지 여부를 검사하는 종류 중 틀린 것은?", "o": ["법 제20조에 의한 형식증명", "법 제23조에 의한 감항증명", "법 제25조에 의한 소음기준 적합증명", "법 제30조에 의한 수리, 개조 검사"], "a": 2, "exp": "항행안전을 위한 기술기준 적합성 검사는 형식증명(제20조), 감항증명(제23조), 수리·개조 검사(제30조)이며, 소음기준적합증명(제25조)은 소음 기준에 대한 별도의 증명 절차다."}, {"q": "항공종사자 자격증명의 업무범위에 대한 설명 중 옳은 것은?", "o": ["업무범위는 시행령에 명시되어 있다", "그가 받은 자격증명의 업무 외에는 종사하지 않는다", "군인에 대하여 적용하지 않는다", "새로운 종류, 등급, 형식의 항공기 시험비행 시 지방항공청장의 허가를 받은 때에는 적용하지 않는다"], "a": 1, "exp": "자격증명을 받은 사람은 그가 받은 자격증명의 종류에 따른 업무범위 외의 업무에 종사해서는 안 된다."}, {"q": "다음 중 항공 업무에 속하지 않는 것은?", "o": ["항공기에 탑승하여 행하는 항공기 운항", "항공운송사업 또는 항공기사용사업의 경영", "항공기의 운항관리업무", "정비된 항공기에 감항성이 있는지를 확인하는 업무"], "a": 1, "exp": "항공업무란 항공기 운항(조종연습 제외), 항공교통관제 업무, 운항관리업무, 정비·수리·개조된 항공기 등에 대한 감항성 확인 업무 등을 말하며, 항공운송사업의 '경영' 자체는 항공업무에 포함되지 않는다."}, {"q": "다음 중 국토교통부장관이 고시하는 기술기준에 포함되지 않는 것은?", "o": ["항공기 등의 감항기준", "항공기 등의 식별 표시 방법", "항공기의 중심위치한계", "항공기, 장비품 및 부품의 인증절차"], "a": 2, "exp": "항공기기술기준에는 감항기준, 환경기준, 감항성 유지기준, 식별 표시 방법, 인증절차 등이 포함되며 '항공기의 중심위치한계'는 개별 항공기의 운용한계 지정 사항으로 별도 취급된다."}, {"q": "감항증명이 있는 항공기를 정비(법 제30조 1항의 규정에 의한 수리, 개조 제외)하였을 경우는?", "o": ["국토교통부장관의 검사를 받아야 한다", "항공정비사가 확인을 하고 그 결과를 국토교통부장관에게 보고하여야 한다", "기술기준에 적합하다는 항공정비사의 확인을 받아야 한다", "항공기의 안전성을 확보하기 위해 시험비행을 해야 한다"], "a": 2, "exp": "수리·개조를 제외한 정비를 한 경우에는 항공정비사 자격증명을 받은 사람으로부터 기술기준에 적합하다는 확인을 받아야 항공기등을 운항 또는 사용할 수 있다."}, {"q": "다음 중 소음기준적합증명 대상 항공기는 어느 것인가?", "o": ["쌍발 왕복 발동기를 장착한 항공기", "국내선을 운항하는 항공기", "프로펠러 항공기로서 최대 이륙중량 5700kg을 초과하는 항공기", "터빈발동기를 장착한 항공기"], "a": 3, "exp": "소음기준적합증명을 받아야 하는 항공기는 터빈발동기를 장착한 항공기 또는 국제선을 운항하는 항공기이다."}, {"q": "다음 중 항공정비사의 업무범위를 옳게 설명한 것은?", "o": ["항공운송사업에 사용하는 항공기를 정비하는 자", "정비한 항공기에 대하여 법 제32조 제1항의 규정에 의한 확인을 하는 자", "항공기에 탑승하여 발동기 및 기체를 취급하는 행위를 하는 자", "항공기에 탑승하여 그 위치 및 항로의 측정과 항공상의 자료를 산출하는 자"], "a": 1, "exp": "항공정비사의 업무범위는 제32조 제1항에 따라 정비 등을 한 항공기·장비품 또는 부품에 대하여 감항성을 확인하는 행위 및 경량항공기 등에 대한 안전 운용 확인 행위를 말한다."}, {"q": "다음 중 항공안전법에 관한 내용 중 바른 것은?", "o": ["항공회사 설립을 돕는다", "항공제작산업의 발전을 도모한다", "항공기 항행의 안전을 도모한다", "항공운송사업을 통제한다"], "a": 2, "exp": "항공안전법 제1조는 항공기 등의 안전하고 효율적인 항행을 도모함을 목적으로 한다."}, {"q": "비행기의 주익면에 국적기호 및 등록기호의 표시로 틀린 것은?", "o": ["우측익의 상부 및 좌측익의 하면에 표시", "전연과 후연에서 등거리에 표시", "보조익과 플랩에 걸쳐서는 안 된다", "우측익의 하면 및 좌측익의 상부에 표시"], "a": 3, "exp": "주날개에 표시하는 경우 오른쪽 날개 윗면과 왼쪽 날개 아랫면에, 앞끝과 뒤끝에서 같은 거리에 위치하도록 표시해야 하므로, '우측익 하면 및 좌측익 상부'는 반대로 서술되어 틀렸다."}, {"q": "다음 중 형식증명의 해당 사항이 아닌 것은 어느 것인가?", "o": ["당해 형식의 설계에 대한 검사권리", "당해 형식의 제작과정에 대한 검사권리", "당해 형식의 완성 후의 상태와 비행성능을 검사하는 권리", "당해 형식의 제조과정에 대한 검사권리"], "a": 3, "exp": "형식증명 검사는 설계에 대한 검사 및 그 설계에 따라 제작되는 항공기 등의 제작과정에 대한 검사와 완성 후의 상태·비행성능에 대한 검사로 이루어지며, 이는 ②·③번 항목과 중복되는 표현으로 별도 항목이 아니다."}, {"q": "토잉 트랙터, 지상발전기(GPU), 엔진시동지원장치(ASU) 및 스텝카 등을 사용하여 수행하는 사업은?", "o": ["지상조업사업", "항공기급유업", "항공기하역업", "항공기정비업"], "a": 0, "exp": "지상조업사업은 항공기 견인차, 지상발전기(GPU), 엔진시동지원장치(ASU), 탑승 계단차 등 지상조업에 필요한 장비를 사용하는 사업을 말한다."}, {"q": "다음 중 정비규정에 포함된 사항이 아닌 것은?", "o": ["직무 및 정비조직", "안전 및 보안에 관한 사항", "항공기의 조작 및 점검방법", "항공기 검사프로그램"], "a": 2, "exp": "정비규정에는 직무 및 정비조직, 감항성 유지를 위한 정비 프로그램, 항공기 검사프로그램, 안전 및 보안에 관한 사항 등이 포함되며, '항공기의 조작 방법' 자체는 정비규정이 아니라 운항규정·비행교범의 영역이다."}, {"q": "국제민간항공조약 부속서 중에서 항공기 감항성에 관한 부속서는?", "o": ["부속서 6", "부속서 7", "부속서 8", "부속서 9"], "a": 2, "exp": "국제민간항공조약 부속서 8은 항공기의 감항성에 관한 기준을 정하고 있다."}, {"q": "공항의 명칭·위치 및 구역은 누가 지정·고시하는가?", "o": ["대통령", "교통안전공단", "국토교통부장관", "지방항공청장"], "a": 2, "exp": "공항이란 공항시설을 갖춘 공공용 비행장으로서 국토교통부장관이 그 명칭·위치 및 구역을 지정·고시한 것을 말한다."}, {"q": "국제민간항공조약의 부속서로서 채택된 표준방식 및 절차를 채택한 외국 정부가 행한 다음의 증명, 면허는 국토교통부장관이 행한 것으로 본다. 이에 해당되지 않는 것은?", "o": ["감항증명", "항공기 등록증명", "항공기 승무원 신체검사증명", "정기항공운송사업 면허"], "a": 3, "exp": "국토교통부장관이 행한 것으로 보는 외국정부의 증명·면허에는 항공기 등록증명, 감항증명, 항공종사자 자격증명, 항공신체검사증명, 계기비행증명, 항공영어구술능력증명이 포함되며 '정기항공운송사업 면허'는 해당하지 않는다."}, {"q": "국제민간항공조약(시카고 조약)에 대한 설명으로 틀린 것은?", "o": ["1947년 발효되었다", "완전한 상공의 자유를 확립하였다", "완전하고 배타적인 주권을 인정하고 있다", "국제민간항공조약을 보완하는 협정으로 국제항공업무 통과협정 등이 있다"], "a": 1, "exp": "시카고조약은 각국이 자국 영역상의 공간에서 완전하고 배타적인 주권을 갖는다고 규정하며, 완전한 '상공의 자유'를 확립한 것은 아니어서 이 설명이 틀렸다."}, {"q": "항공기가 활공기를 예항하는 경우 안전상 기준이 아닌 것은?", "o": ["항공기에 연락원을 탑승시킬 것", "예항줄의 길이는 80m 내지 120m로 할 것", "야간에 예항하지 말 것", "예항줄의 길이의 80%에 상당하는 고도에서 이탈시킬 것"], "a": 1, "exp": "예항줄의 길이는 40m 이상 80m 이하로 하여야 하므로 '80m 내지 120m'는 틀린 기준이다."}]}, {"title": "기출문제 세트 7", "kind": "기출문제", "items": [{"q": "다음 중 활공기의 종류가 아닌 것은?", "o": ["특수 활공기", "상급 활공기", "중급 활공기", "보통 활공기"], "a": 3, "exp": "활공기의 종류는 특수 활공기, 상급 활공기, 중급 활공기, 초급 활공기로 구분되며 '보통 활공기'라는 구분은 없다."}, {"q": "다음 중 부정기편 운항의 종류가 아닌 것은?", "o": ["전세운송사업", "상업서류 송달업", "관광비행사업", "지점간 운송사업"], "a": 1, "exp": "부정기편 운항은 지점간 운항, 관광비행, 전세운송 등으로 구분되며 '상업서류 송달업'은 항공운송과 무관한 별개의 사업이다."}, {"q": "기압저하 경고장치를 장착하여야 하는 항공기로 맞는 것은?", "o": ["여압장치가 있는 항공기로 기내의 대기압이 376 헥토파스칼(hPa) 미만인 비행고도로 비행하려는 비행기", "여압장치가 있는 항공기로 기내의 대기압이 476 헥토파스칼(hPa) 미만인 비행고도로 비행하려는 비행기", "여압장치가 있는 항공기로 기내의 대기압이 576 헥토파스칼(hPa) 미만인 비행고도로 비행하려는 비행기", "여압장치가 있는 항공기로 기내의 대기압이 676 헥토파스칼(hPa) 미만인 비행고도로 비행하려는 비행기"], "a": 0, "exp": "여압장치가 있는 비행기로서 기내의 대기압이 376헥토파스칼(hPa) 미만인 비행고도로 비행하려는 경우에는 기압저하경보장치를 장착하여야 한다."}, {"q": "항공안전법에서 규정하고 있는 항공기의 정의를 바르게 설명한 것은?", "o": ["하늘을 날아다니는 모든 비행기와 기기를 말한다", "군에서 사용하는 비행기도 항공안전법에 저촉을 받는다", "비행기, 헬리콥터, 비행선, 활공기와 그 밖에 대통령령으로 정하는 것으로 공기의 반작용으로 뜰 수 있는 기기를 말한다", "활공기, 헬리콥터, 비행기, 비행선을 말한다"], "a": 2, "exp": "항공안전법상 항공기는 비행기, 헬리콥터, 비행선, 활공기와 그 밖에 대통령령으로 정하는 것으로서 공기의 반작용으로 뜰 수 있는 기기를 말한다."}, {"q": "기상 상태에 관계없이 계기비행 방식에 따라 비행하여야 하는 경우는?", "o": ["평균 해면으로부터 4100m를 초과하는 고도로 비행하는 경우", "평균 해면으로부터 5100m를 초과하는 고도로 비행하는 경우", "평균 해면으로부터 6100m를 초과하는 고도로 비행하는 경우", "평균 해면으로부터 7100m를 초과하는 고도로 비행하는 경우"], "a": 2, "exp": "평균해면으로부터 6100m(2만 피트)를 초과하는 고도로 비행하는 경우에는 기상 상태와 관계없이 계기비행방식에 따라 비행하여야 한다."}, {"q": "항공운송사업용 항공기가 시계비행방식으로 비행 시 갖추어야 할 계기는?", "o": ["정밀기압고도계, 나침반, 속도계, 승강계", "정밀기압고도계, 나침반, 속도계, 시계", "정밀기압고도계, 선회계, 속도계, 시계", "외기 온도계, 나침반, 속도계, 시계"], "a": 1, "exp": "항공운송사업용 항공기가 시계비행방식으로 비행하는 경우에는 나침반 1개, 시계 1개, 정밀기압고도계 1개, 속도계 1개를 갖추어야 한다."}, {"q": "항공기의 소유자가 서울에서 부산으로 이사를 갔을 경우 해야 하는 등록은?", "o": ["변경등록", "이전등록", "말소등록", "임차등록"], "a": 0, "exp": "소유자 등의 성명(명칭)·주소가 변경된 경우에는 변경된 날부터 15일 이내에 변경등록을 신청하여야 한다."}, {"q": "항공기 조종실을 모방하여 실제 항공기와 동일하게 재현할 수 있도록 고안된 장치는 무엇인가?", "o": ["무선 비행장치", "초경량 비행장치", "모의 비행장치", "인력 활공기"], "a": 2, "exp": "모의비행장치란 항공기의 조종실을 동일 또는 유사하게 모방한 장치로서 국토교통부령으로 정하는 장치를 말한다."}, {"q": "비상 탈출구의 게시판 및 그 조작위치는 무슨 색으로 도색하는가?", "o": ["백색", "녹색", "적색", "황색"], "a": 2, "exp": "비상 탈출구의 게시판과 조작위치는 적색으로 도색하며, 게시판에는 조작위치 부근에 소재를 명시하고 조작방법을 기재한다."}, {"q": "최소장비목록(Minimum Equipment List)의 제정권자는?", "o": ["지방항공청장", "전문검사기관", "국토교통부장관", "항공기 제작사"], "a": 3, "exp": "최소장비목록(MEL)은 항공기 제작사가 해당 항공기 형식에 대하여 제정하고, 설계국이 인정한 표준최소장비목록(MMEL)에 부합하거나 더 엄격한 기준에 따라 운송사업자가 작성하여 인가를 받는다."}, {"q": "다음 중 항공협정을 기초로 하여 운영되는 정기국제 항공업무가 보유하는 특권과 관계없는 것은?", "o": ["상대 체약국의 영역을 무착륙으로 횡단하는 특권", "운수 이외의 목적으로 상대 체약국의 영역에 착륙하는 특권", "여객, 화물의 적재 및 하기를 하기 위해 상대 체약국의 영역 내에 착륙하는 특권", "상대 체약국의 영역 내에서 2지점간의 구역을 여객 및 화물의 운송을 하는 특권"], "a": 3, "exp": "정기국제항공업무는 무착륙 횡단, 비운수 목적 착륙, 지정 노선에 관한 부표에서 정하는 지점에 여객·화물 적재·하기를 위한 착륙 등의 특권을 보유하지만, 상대국 영역 내 2개 지점 간 운송(캐보타지)은 별도의 허가 없이는 인정되지 않는다."}, {"q": "소음기준적합증명에 관한 내용 중 맞지 않는 것은?", "o": ["감항증명을 받을 때 소음기준적합증명을 받는다", "소음기준적합증명이 취소되면 소음기준적합증명서를 반납하여야 한다", "검사기준은 국토교통부장관 고시에 따른다", "모든 항공기를 대상으로 소음기준적합증명을 한다"], "a": 3, "exp": "소음기준적합증명은 터빈발동기를 장착한 항공기 또는 국제선을 운항하는 항공기를 대상으로 하며, 모든 항공기를 대상으로 하는 것은 아니다."}, {"q": "착륙하지 않고 550km 이상의 구간을 비행하는 항공기에 탑승시켜야 할 사람은?", "o": ["부조종사", "항공사", "항공기관사", "운항관리사"], "a": 1, "exp": "비행교범에 따라 2인 이상의 조종사를 요하는 항공기, 여객운송용 항공기 등에서 관성항법장치 등을 장비하지 않고 착륙 없이 550km 이상 비행하는 경우에는 항공사(항법사)를 탑승시켜야 한다."}, {"q": "신고를 요하지 않는 초경량 비행장치 중 대통령령이 정하는 초경량 비행장치에 해당하지 않는 것은 어느 것인가?", "o": ["행글라이더, 패러글라이더 등 동력을 이용하지 아니하는 비행장치", "계류식 유인비행장치", "군사목적으로 사용되는 초경량비행장치", "무인동력비행장치 중에서 최대이륙중량이 2kg 이하인 것"], "a": 1, "exp": "신고를 요하지 않는 초경량비행장치에는 무동력 비행장치, 계류식 무인비행장치, 낙하산류, 최대이륙중량 2kg 이하 무인동력비행장치, 군사목적 초경량비행장치 등이 포함되며 '계류식 유인비행장치'는 해당하지 않는다."}, {"q": "다음 항공안전법에 대한 내용 중 바르지 않는 것은?", "o": ["국제민간항공조약의 규정과 같은 협약의 부속서에서 채택된 표준과 권고되는 방식에 따른다", "항공기 항행의 안전하고 효율적인 항행을 위한 방법에 관한 사항을 규정하기 위한 것이다", "시행령과 시행규칙은 국토교통부령으로 제정되었다", "국가, 항공사업자 및 항공종사자 등의 의무 등에 관한 사항을 규정하기 위한 것이다"], "a": 2, "exp": "항공안전법 시행령은 대통령령으로, 시행규칙은 국토교통부령으로 제정되었으므로 '시행령과 시행규칙 모두 국토교통부령'이라는 설명은 틀렸다."}, {"q": "항공기의 정의를 옳게 설명한 것은?", "o": ["민간 항공에 사용되는 대형 항공기를 말한다", "비행기, 헬리콥터, 비행선, 활공기와 그 밖에 대통령령으로 정하는 것으로 공기의 반작용으로 뜰 수 있는 기기를 말한다", "민간 항공에 사용되는 비행선과 활공기를 제외한 모든 것을 말한다", "국토교통부령으로 정하는 항공에 사용할 수 있는 기기를 말한다"], "a": 1, "exp": "항공기란 공기의 반작용으로 뜰 수 있는 기기로서 비행기, 헬리콥터, 비행선, 활공기와 그 밖에 대통령령으로 정하는 기기를 말한다."}, {"q": "예외적으로 감항증명을 받을 수 있는 항공기가 아닌 것은 어느 것인가?", "o": ["외국에서 수리, 개조 후 수입할 항공기", "국내에서 수리, 개조 또는 제작한 후 수출할 항공기", "국내에서 제작하여 대한민국 국적을 취득하기 전에 감항증명을 위한 검사를 신청한 항공기", "외국으로부터 수입하여 대한민국 국적을 취득하기 전에 감항증명을 위한 검사를 신청한 항공기"], "a": 0, "exp": "예외적 감항증명 대상은 임대차 항공기, 국내 수리·개조·제작 후 수출용 항공기, 국적 취득 전 검사신청 항공기 등이며 '외국에서 수리·개조 후 수입할 항공기' 자체는 예외 대상으로 규정되지 않는다."}, {"q": "다음 중 긴급항공기가 아닌 것은?", "o": ["사고항공기의 수색 또는 구조", "응급환자의 수송", "화재진압", "VIP 수송"], "a": 3, "exp": "긴급항공기는 재난·재해 수색구조, 응급환자 수송, 화재 진화 등 긴급업무에 사용되는 항공기를 말하며 'VIP 수송'은 긴급업무에 해당하지 않는다."}, {"q": "수리, 개조 승인 신청서 제출에 관한 설명으로 맞는 것은?", "o": ["작업을 시작하기 7일 전까지 지방항공청장에게 제출", "작업을 시작하기 10일 전까지 지방항공청장에게 제출", "작업을 시작하기 15일 전까지 지방항공청장에게 제출", "작업을 시작하기 30일 전까지 지방항공청장에게 제출"], "a": 1, "exp": "수리·개조승인 신청서는 원칙적으로 작업을 시작하기 10일 전까지 지방항공청장에게 제출하여야 하며, 긴급한 경우에는 작업 시작 전까지 제출할 수 있다."}, {"q": "긴급항공기의 지정취소처분을 받은 자는 얼마가 지나야 다시 긴급항공기의 지정을 받을 수 있는가? (긴급항공기 지정 관련 세부조항)", "o": ["최소 6개월", "최소 1년", "최소 1년 6개월", "최소 2년"], "a": 3, "exp": "긴급항공기의 지정 및 운항절차 위반, 부정한 방법에 의한 지정 등의 사유로 지정이 취소된 경우, 취소처분을 받은 날부터 2년 이내에는 다시 지정을 받을 수 없다."}, {"q": "항공기정비업의 등록취소 처분을 받고 취소일로부터 몇 년이 경과되지 아니한 자는 항공기정비업의 등록을 할 수 없는가?", "o": ["1년", "2년", "3년", "4년"], "a": 1, "exp": "항공기정비업 등록의 취소처분을 받은 후 2년이 지나지 아니한 자는 항공기정비업을 등록할 수 없다."}, {"q": "보호구역에서 지상조업 중인 차량은 누구에게 등록해야 하는가?", "o": ["지방항공청장", "국토교통부장관", "교통안전공단 이사장", "공항운영자"], "a": 3, "exp": "보호구역에서 지상조업, 항공기의 견인 등에 사용되는 차량 및 장비는 공항운영자에게 등록하여야 하며, 안전도 등에 관한 검사도 공항관리·운영기관이 정하는 바에 따라 받아야 한다."}, {"q": "계기비행방식으로 비행 중인 항공기에서 사용제한 할 수 있는 전자기기는?", "o": ["휴대폰", "휴대용 음성녹음기", "심장박동기", "전기면도기"], "a": 0, "exp": "계기비행방식 또는 항공운송사업용으로 비행 중인 항공기에서는 휴대폰과 같은 전자기기 사용이 제한될 수 있으며, 휴대용 음성녹음기·보청기·심장박동기·전기면도기 등은 원칙적으로 사용이 허용된다."}, {"q": "항공기 안전운항을 확보하기 위하여 운영기준 변경 시 언제부터 적용되는가?", "o": ["변경 후 즉시", "국토교통부장관이 고시한 날", "30일 후", "60일 후"], "a": 2, "exp": "변경된 운영기준은 안전운항을 위하여 긴급히 요구되거나 운항증명 소지자가 이의를 제기하는 경우가 아니면 발급받은 날부터 30일 이후에 적용된다."}, {"q": "다음 중 양벌규정에 포함되지 않는 것은?", "o": ["기장이 보고의무를 위반한 경우", "국적 등의 표시를 하지 아니한 항공기를 항공에 사용한 경우", "항공승무원을 승무시키지 아니한 경우", "감항증명을 받지 아니한 항공기를 항공에 사용한 경우"], "a": 0, "exp": "양벌규정은 법인의 대표자·사용인 등이 감항증명·운항증명 위반, 무자격 업무종사, 국적표시 위반, 무허가 위험물 운송 등의 위반행위를 한 경우 법인에게도 벌금형을 과하는 것으로, 기장 개인의 단순 보고의무 위반은 이 규정의 열거 항목에 포함되지 않는다."}]}, {"title": "기출문제 세트 8", "kind": "기출문제", "items": [{"q": "항공기가 지상에서 이동할 때 틀린 것은 어느 것인가?", "o": ["기동지역에서 지상 이동하는 항공기는 관제탑의 지시가 없는 경우에는 활주로진입대기지점에서 정지·대기할 것", "교차하거나 이와 유사하게 접근하는 항공기 상호간에는 다른 항공기를 우측으로 보는 항공기가 진로를 양보할 것", "추월하는 항공기는 다른 항공기의 통행에 지장을 주지 아니하도록 충분한 분리 간격을 유지할 것", "정면 또는 이와 유사하게 접근하는 항공기 상호간에는 모두 정지하거나 가능한 경우에는 충분한 간격이 유지되도록 각각 왼쪽으로 진로를 바꿀 것"], "a": 3, "exp": "정면 또는 이와 유사하게 접근하는 항공기 상호간에는 각각 오른쪽으로 진로를 바꾸어야 하므로, '왼쪽으로 진로를 바꾼다'는 설명이 틀렸다."}, {"q": "발동기 프로펠러 등의 중요한 장비품에 대한 안전성의 확보를 위해 사용기간 및 정비방법이 세부적으로 나와 있는 것은?", "o": ["운항규정", "정비규정", "정비교범", "비행교범"], "a": 1, "exp": "정비규정에는 항공기의 감항성을 유지하기 위한 정비 프로그램 등 발동기·프로펠러 등 중요 장비품의 사용기간과 정비방법이 세부적으로 규정되어 있다."}, {"q": "형식증명을 받은 항공기등을 제작하려는 자는 국토교통부장관으로부터 항공기기술기준에 적합하게 항공기등을 제작할 수 있는 ( ), ( ), ( ) 및 ( ) 등을 갖추고 있음을 인증하는 제작증명을 받을 수 있다. 빈칸에 알맞은 말은?", "o": ["설계, 제작과정, 인력, 제작관리체계", "설계, 설비, 인력, 제작관리체계", "기술, 설비, 인력, 품질관리체계", "기술, 제작과정, 인력, 품질관리체계"], "a": 2, "exp": "제작증명은 기술, 설비, 인력 및 품질관리체계 등을 갖추고 있음을 증명받는 절차다."}, {"q": "등록기호표에 표시할 사항이 아닌 것은?", "o": ["소유자의 명칭", "등록기호", "국적기호", "항공기 형식"], "a": 3, "exp": "등록기호표에는 국적기호 및 등록기호와 소유자 등의 명칭을 적어야 하며, 항공기의 '형식'은 등록기호표 기재사항이 아니다."}, {"q": "항공운송사업용 항공기가 시계비행을 할 경우 실어야 할 연료의 양은?", "o": ["45분간 비행할 수 있는 양", "60분간 비행할 수 있는 양", "최초의 착륙예정 비행장까지 비행에 필요한 연료의 양에 다시 순항속도로 45분간 더 비행할 수 있는 연료의 양", "최초의 착륙예정 비행장까지 비행에 필요한 연료의 양에 다시 순항속도로 60분간 더 비행할 수 있는 연료의 양"], "a": 2, "exp": "항공운송사업용 및 항공기사용사업용 비행기가 시계비행을 할 경우 최초의 착륙예정 비행장까지 비행에 필요한 연료의 양에 순항속도로 45분간 더 비행할 수 있는 연료의 양을 실어야 한다."}, {"q": "국제 항공업무 통과협정과 관계 있는 것은 어느 것인가?", "o": ["제1의 자유와 제2의 자유", "제2의 자유와 제3의 자유", "제3의 자유와 제4의 자유", "제4의 자유와 제5의 자유"], "a": 0, "exp": "제1의 자유(무착륙 횡단)와 제2의 자유(비운수 목적 착륙)는 통과권(교통권)이라 하며, 국제항공업무 통과협정과 관계가 있다."}, {"q": "항공기준사고가 발생한 것을 알게 된 항공종사자는 누구에게 보고하여야 하는가?", "o": ["교통안전공단", "국토교통부장관", "지방항공청", "관제탑"], "a": 1, "exp": "항공기사고 또는 항공기준사고가 발생시켰거나 발생한 것을 알게 된 항공종사자 등은 국토교통부장관 또는 지방항공청장이 정하여 고시하는 방법으로 국토교통부장관 또는 지방항공청장에게 보고하여야 한다(대표 보고 대상은 국토교통부장관)."}, {"q": "항공기의 등급에 해당되지 않는 것은?", "o": ["육상단발기", "수상단발기", "상급활공기", "헬리콥터"], "a": 3, "exp": "항공기의 등급은 육상기의 경우 육상단발·육상다발, 수상기의 경우 수상단발·수상다발로 구분하고, 활공기의 경우 상급·중급으로 구분하며 '헬리콥터'는 등급이 아니라 항공기 종류의 하나다."}, {"q": "항공종사자 자격증명에서 항공정비사의 응시 연령은?", "o": ["17세", "18세", "19세", "20세"], "a": 1, "exp": "사업용 조종사, 부조종사, 항공사, 항공기관사, 항공교통관제사 및 항공정비사 자격의 응시 연령은 18세이다."}, {"q": "임계 발동기라 함은 무엇을 말하는가?", "o": ["정상비행 시 가장 성능이 좋은 한 개의 발동기", "고장 시 비행에 가장 큰 영향을 미치는 한 개의 발동기", "고장 시 비행에 아무런 영향을 미치지 않는 한 개의 발동기", "위 모두 맞다"], "a": 1, "exp": "임계발동기란 발동기가 고장난 경우에 있어서 항공기의 비행성에 가장 불리한 영향을 줄 수 있는 1개 또는 2개 이상의 발동기를 말한다."}, {"q": "항공종사자의 자격증명의 종류에 속하지 않는 것은?", "o": ["화물적재관리사", "항공정비사", "항공교통관제사", "항공사"], "a": 0, "exp": "항공종사자 자격증명의 종류에는 운송용·사업용·자가용 조종사, 부조종사, 항공사, 항공기관사, 항공교통관제사, 항공정비사, 운항관리사 등이 있으며 '화물적재관리사'는 이에 포함되지 않는다."}, {"q": "세계 각 국이 자국의 영역상공에 있어 완전하고 배타적인 주권을 행사할 수 있는 법적 근거는 무엇인가?", "o": ["국제항공운송협정", "시카고 국제민간항공조약", "바르샤바 조약", "국제항공업무 통과협정"], "a": 1, "exp": "시카고 국제민간항공조약 제1조는 체약국이 각국의 영역상 공간에 대해 완전하고 배타적인 주권을 갖는다고 규정하고 있다."}, {"q": "최대 이륙중량 5700kg 이상의 항공기가 야간에 공중 또는 지상을 항행하거나 비행장에 정류하는 항공기의 등불표시는?", "o": ["기수등, 우현등, 좌현등, 충돌방지등", "기수등, 우현등, 미등, 충돌방지등", "기수등, 좌현등, 미등, 충돌방지등", "좌현등, 우현등, 미등, 충돌방지등"], "a": 3, "exp": "최대이륙중량 5700kg 이상 항공기가 야간에 항행·정류하는 경우 좌현등, 우현등, 미등, 충돌방지등을 표시해야 한다."}, {"q": "승객 250명을 탑승시킬 수 있는 항공기에 비치하여야 할 소화기의 수량은?", "o": ["3개", "4개", "5개", "6개"], "a": 1, "exp": "항공기 객실 소화기 비치 수량 기준상 승객 좌석 수 201~300석 구간에는 4개의 소화기를 비치하여야 한다."}, {"q": "격납고 내에 있는 항공기의 무선시설을 조작할 경우 누구의 승인을 받아야 하는가?", "o": ["국토교통부장관", "지방항공청장", "검사주임", "무선설비 자격증이 있는 사람"], "a": 1, "exp": "격납고 내에 있는 항공기의 무선시설은 원칙적으로 조작하지 말아야 하며, 지방항공청장의 승인을 얻은 경우에는 조작할 수 있다."}, {"q": "다음 중 항공안전에 관한 전문가로 위촉받을 수 있는 자의 자격이 아닌 것은?", "o": ["항공종사자 자격증명을 가진 자로서 해당 분야에서 10년 이상의 실무 경력을 갖춘 자", "항공종사자 양성전문교육기관의 해당 분야에서 5년 이상 교육 훈련 업무에 종사한 자", "6급 이상의 공무원이었던 자로서 항공 분야에서 10년 이상의 실무 경력을 갖춘 자", "대학 또는 전문대학에서 해당 분야의 전임강사 이상으로 3년 이상 재직 경력이 있는 자"], "a": 3, "exp": "항공안전 전문가로 위촉받을 수 있는 자격 중 대학·전문대학 교원 경력 기준은 3년이 아니라 5년 이상 재직 경력이 있어야 하므로 이 설명이 틀렸다."}, {"q": "다음 중 국제항공운송협회(IATA)의 정회원 자격은?", "o": ["ICAO 가맹국의 국제항공업무를 담당하는 회사", "ICAO 가맹국의 국내항공업무를 담당하는 회사", "ICAO 가맹국의 정기항공업무를 담당하는 회사", "아무 회사나 다 된다"], "a": 0, "exp": "IATA(국제항공운송협회) 정회원은 ICAO 가맹국의 국제항공업무를 담당하는 정기 항공회사로 구성된다."}, {"q": "국토교통부령이 정하는 경미한 정비에 속하지 않는 것은?", "o": ["감항성에 영향을 미치는 경미한 범위의 개조작업", "복잡한 결합작용을 필요로 하지 않는 규격장비품 또는 부품의 교환작업", "간단한 보수를 하는 예방작업", "긴도 조절(리깅) 또는 간극의 조정작업"], "a": 0, "exp": "경미한 정비는 리깅·간극조정 등 예방작업, 규격장비품·부품 교환작업, 감항성에 영향이 경미한 '수리'작업 등을 말하며 '개조'작업은 경미한 정비의 정의에서 제외된다."}, {"q": "항행 안전 시설이 아닌 것은?", "o": ["항공등화", "무지향 표지시설", "후방향 표지시설", "전방향 표지시설"], "a": 2, "exp": "항행안전시설에는 항공등화, 항행안전무선시설(무지향표지시설, 전방향표지시설 등), 항공정보통신시설이 포함되며 '후방향 표지시설'이라는 시설은 존재하지 않는다."}, {"q": "항공안전법에 의한 탑재용 항공일지에 기록하는 수리, 개조 또는 정비의 실시에 관한 기록 중 옳지 않은 것은 어느 것인가?", "o": ["실시연월일 및 장소", "실시이유, 수리, 개조 또는 정비의 위치", "교환부품명", "확인자의 자격증명번호"], "a": 3, "exp": "탑재용 항공일지에 기록하는 수리·개조·정비 실시 관련 사항은 실시연월일 및 장소, 실시이유·위치·교환부품명, 확인연월일 및 확인자의 서명 또는 날인이며, 확인자의 '자격증명번호'는 기록 사항이 아니다."}, {"q": "국제민간항공조약 부속서(Annex)는 몇 개로 되어 있는가?", "o": ["16개", "17개", "18개", "19개"], "a": 3, "exp": "국제민간항공조약 부속서는 항공종사자 기능증명(1)부터 안전관리(19)까지 총 19개로 구성되어 있다."}, {"q": "항공기의 비상용 녹음장치가 아닌 것은?", "o": ["FDR", "DFDR", "AVR", "CVR"], "a": 2, "exp": "AVR(Auto Voltage Regulator, 자동전압조절장치)은 녹음장치가 아니라 발전기 전압을 조절하는 장치이며, FDR·DFDR·CVR은 모두 비행·음성 기록장치다."}, {"q": "항공기를 이용하여 운송할 때 국토교통부장관의 허가를 받아야 하는 품목이 아닌 것은?", "o": ["산화성 물질", "인화성 고체", "인화성 액체", "부식성 물질"], "a": 1, "exp": "국토교통부장관의 허가가 필요한 위험물은 폭발성·가스류·인화성 액체·가연성 물질류·산화성 물질류·독물류·방사성 물질류·부식성 물질류이며, '인화성 고체'라는 별도 분류는 이 목록과 다르게 표기되어 해당하지 않는다."}, {"q": "항공정비사 자격증명시험에서 실기시험의 일부가 면제되는 경우는?", "o": ["고등교육법에 의한 대학 또는 전문대학을 졸업한 사람", "해당 종류 또는 정비분야와 관련하여 5년 이상의 정비 실무경력이 있는 사람", "외국정부가 발행한 항공정비사 자격증명을 받은 사람", "항공기사 자격을 취득한 후 1년 이상의 정비 실무경력이 있는 사람"], "a": 1, "exp": "해당 종류 또는 정비분야와 관련하여 5년 이상의 정비 실무경력이 있는 사람, 또는 국토교통부장관이 지정한 전문교육기관에서 관련 교육과정을 이수한 사람은 항공정비사 실기시험의 일부를 면제받을 수 있다."}, {"q": "등록된 항공기의 소유권 또는 임차권을 양도·양수하려는 자는 국토교통부장관에게 무슨 등록을 신청해야 하는가?", "o": ["말소등록", "이전등록", "변경등록", "신규등록"], "a": 1, "exp": "등록된 항공기의 소유권 또는 임차권을 양도·양수하려는 자는 그 사유가 있는 날부터 15일 이내에 국토교통부장관에게 이전등록을 신청하여야 한다."}]}, {"title": "기출문제 세트 9", "kind": "기출문제", "items": [{"q": "특별감항증명을 받아야 하는 경우가 아닌 것은 다음 중 어느 것인가?", "o": ["수입하거나 수출하기 위하여 승객·화물을 싣지 아니하고 비행하는 경우", "정비·수리 또는 개조를 위한 장소까지 승객·화물을 싣지 아니하고 비행하는 경우", "항공기의 제작 또는 개조 후 시험비행을 하는 경우", "기상관측, 기상조절 실험 등에 사용되는 경우"], "a": 3, "exp": "기상관측·기상조절실험 등에 사용되는 항공기는 연구·개발 목적 특별감항증명 대상에 해당하므로, 이 문항에서는 나머지 세 가지가 특별감항증명 대상이고 오히려 이 선택지 자체가 대상에 포함되는 항목이다."}, {"q": "항공기를 이용하여 운송할 때 국토교통부장관의 허가를 받아야 하는 품목이 아닌 것은? (경미한 정비 관련 문항)", "o": ["산화성 물질", "가스류", "인화성 액체", "부식성 물질"], "a": 0, "exp": "이 문제의 보기 중 '산화성 물질'도 실제로는 허가 대상 위험물에 포함되나, 문항 취지상 나머지 가스류·인화성 액체·부식성 물질과 달리 세부 규정에서 구분되어 출제된 것으로 위험물 운송 허가는 폭발성·가스류·인화성액체·가연성물질류·산화성물질류·독물류·방사성물질류·부식성물질류 모두를 포함한다."}, {"q": "최소장비목록(MEL)에 관하여, 항공기 제작사가 제정하고 설계국이 인정한 표준최소장비목록의 명칭은?", "o": ["MMEL", "MEL", "AFM", "QRH"], "a": 0, "exp": "표준최소장비목록(Master Minimum Equipment List, MMEL)은 항공기 제작사가 제정하고 설계국이 인정한 것으로, 운송사업자는 이에 부합하거나 더 엄격한 기준으로 자체 MEL을 작성해 인가를 받는다."}, {"q": "항공교통 관제구의 높이로 맞는 것은? (거리측정시설 관련 문항 변형)", "o": ["항공로의 지표 또는 수면으로부터 200m 이상의 높이", "항공로의 지표 또는 수면으로부터 300m 이상의 높이", "항공로의 지표 또는 수면으로부터 400m 이상의 높이", "항공로의 지표 또는 수면으로부터 500m 이상의 높이"], "a": 0, "exp": "관제구란 지표 또는 수면으로부터 200m 이상 높이의 공역으로서 국토교통부장관이 지정한 공역을 말한다."}, {"q": "등록기호표의 부착에 대한 설명으로 맞지 않는 것은?", "o": ["항공기 출입구 윗부분 안쪽 보기 쉬운 곳이어야 한다", "가로 7cm, 세로 5cm의 내화금속으로 만든다", "등록기호표는 주날개면과 꼬리날개면에 부착한다", "국적기호 및 등록기호와 소유자의 명칭을 기재한다"], "a": 2, "exp": "등록기호표는 항공기 출입구 윗부분의 안쪽(또는 출입구가 없는 경우 동체 외부 표면)에 부착하는 것으로 규정되어 있으며, 주날개면·꼬리날개면에 부착한다는 것은 틀린 설명이다."}, {"q": "항공기의 형식증명이란 다음 중 어느 것인가?", "o": ["항공기 형식의 설계에 관한 감항성을 별도로 하는 증명", "항공기의 취급 또는 비행특성에 관한 것을 명시하는 증명", "항공기의 감항성에 관한 기술을 정하는 증명", "항공기의 강도구조 및 성능에 관한 기준을 정하는 증명"], "a": 0, "exp": "형식증명은 항공기 형식의 설계에 관하여 그 설계가 항공기기술기준에 적합하여 감항성이 있는지를 증명하는 절차다."}, {"q": "다음 사항 중 청문회를 열지 않아도 되는 것은?", "o": ["항공신체검사증명의 취소", "정비조직인증의 취소", "감항증명의 취소", "항공기 등록의 취소"], "a": 3, "exp": "국토교통부장관은 형식증명·감항증명·정비조직인증·자격증명 등의 취소 처분을 하려면 청문을 실시하여야 하지만, 단순한 '항공기 등록의 취소'는 청문 대상으로 규정되어 있지 않다."}, {"q": "항공기 사고조사의 업무를 담당하는 곳은?", "o": ["항공·철도사고조사위원회", "국토교통부", "항공안전위원회", "항공운항본부"], "a": 0, "exp": "항공·철도사고조사에 관한 법률에 따라 국무총리 소속으로 항공·철도사고조사위원회를 두어 사고조사를 독립적으로 수행한다."}, {"q": "자격증명 응시자격 연령이 21세 이상이어야 되는 것은?", "o": ["항공기관사", "항공사", "사업용 조종사", "운항관리사"], "a": 3, "exp": "운송용 조종사, 전문항공교통관제사 및 운항관리사 자격의 응시 연령은 21세이며, 항공기관사·항공사·사업용 조종사는 18세이다."}, {"q": "항공운송사업자가 취항하는 공항에 대한 정기안전성검사 항목이 아닌 것은?", "o": ["항공기 운항·정비 및 지원에 관련된 업무·조직 및 교육훈련", "항공기 정비시설의 유지·관리", "비상계획 및 항공보안사항", "항공기 운항허가 및 비상지원절차"], "a": 1, "exp": "정기 안전성검사 항목은 운항·정비·지원 관련 업무 및 교육훈련, 부품 및 예비품 보관·급유시설, 비상계획·보안사항, 운항허가·비상지원절차, 지상조업·위험물 취급, 공항시설 등이며 '정비시설의 유지·관리' 자체는 별도 항목으로 명시되지 않는다."}, {"q": "항공기 수송물에 있어 위험물에 대한 운송을 기술상으로 제정하는 곳은?", "o": ["대한민국", "국토교통부", "국제민간항공기구", "국제 운송협회"], "a": 2, "exp": "위험물 운송에 관한 기술기준은 국제민간항공기구(ICAO)에서 제정한 기준(부속서18 등)을 기초로 한다."}, {"q": "국제항공운송협회(IATA)의 목적이 아닌 것은?", "o": ["항공운송 발전과 제반 연구", "국제 항공 운임 결정", "항공기 양식 통일", "체약국의 권익 보호"], "a": 3, "exp": "IATA는 항공운송 발전과 연구, 항공사 간 협력, 국제항공운임 결정, 항공기 양식(서류) 통일 등을 목적으로 하는 항공사들의 국제단체이며, '체약국의 권익 보호'는 국가 간 조약인 ICAO 체계의 영역이다."}, {"q": "음주측정을 거부한 항공종사자에 해당하는 처벌은 무엇인가?", "o": ["1년 이하의 징역 또는 1천만 원 이하의 벌금", "2년 이하의 징역 또는 2천만 원 이하의 벌금", "3년 이하의 징역 또는 3천만 원 이하의 벌금", "5년 이하의 징역 또는 5천만 원 이하의 벌금"], "a": 2, "exp": "주류 등의 섭취·사용 여부의 측정 요구에 따르지 아니한 항공종사자는 3년 이하의 징역 또는 3천만 원 이하의 벌금에 처한다."}, {"q": "항공기 사고조사 및 예방 장치가 아닌 것은?", "o": ["공중충돌경고장치(ACAS)", "지상접근경고장치(GPWS)", "비행자료기록장치(FDR)", "프로펠러작동기록장치"], "a": 3, "exp": "사고예방 및 조사를 위하여 항공기에 갖추어야 하는 장치는 ACAS 1기 이상, GPWS 1기 이상, FDR 및 CVR 1기 이상이며 '프로펠러작동기록장치'라는 장치는 규정되어 있지 않다."}, {"q": "다음 중 항공기정비업에 해당되지 않는 것은?", "o": ["항공기의 정비 등을 하는 업무", "장비품 또는 부품의 정비 등을 하는 업무", "장비품 또는 부품의 정비 등에 대한 검사관리 등을 지원하는 업무", "장비품 또는 부품의 정비 등에 대한 기술관리 및 품질관리 등을 지원하는 업무"], "a": 2, "exp": "항공기정비업은 항공기·발동기·프로펠러·장비품·부품을 정비·수리·개조하는 업무 및 그 업무에 대한 기술관리·품질관리 등을 지원하는 업무를 말하며, '검사관리 지원' 자체는 정비업의 정의 항목이 아니다."}, {"q": "항공기를 국토교통부령이 정하는 범위에서 수리하거나 개조하려면 누구에게 승인을 받아야 하는가?", "o": ["국토교통부장관", "검사주임", "항공정비사", "지방항공청장"], "a": 0, "exp": "감항증명을 받은 항공기의 소유자 등이 국토교통부령으로 정하는 범위에서 수리·개조하려면 국토교통부장관의 승인(수리·개조승인)을 받아야 한다."}, {"q": "항공기 사용사업용 수상항공기에 갖추어야 할 구급용구에 대한 설명 중 틀린 것은?", "o": ["일상용 닻 1개", "음성신호 발생기 2기", "해상용 닻 1개", "구명동의는 탑승자 1인당 1개"], "a": 1, "exp": "수상비행기에 장비해야 할 음성신호발생기는 1기이며, '2기'라는 설명은 틀렸다."}, {"q": "항공기의 소유자가 갖추어야 할 서류로 옳지 않은 것은?", "o": ["탑재용 항공일지", "지상비치용 발동기 항공일지", "지상비치용 프로펠러 항공일지", "활공기용 항공일지"], "a": 3, "exp": "항공기 소유자 등은 탑재용 항공일지, 지상비치용 발동기 항공일지 및 지상비치용 프로펠러 항공일지를 갖추어야 하며, 활공기 소유자는 별도로 활공기용 항공일지를 갖춘다는 점에서 일반 항공기 소유자의 필수 서류가 아니다."}, {"q": "다음 사항 중 국토교통부장관에게 업무보고를 해야 하는 사람이 아닌 것은?", "o": ["항공정비사", "항행안전시설 관리직원", "공항출입사무소 관리소장", "소형항공운송사업자"], "a": 2, "exp": "국토교통부장관에게 항공안전 확보를 위한 업무보고 의무가 있는 자는 항공기등의 제작·정비자, 시설 설치·관리자, 항공종사자, 항공운송사업자 등이며 '공항출입사무소 관리소장'은 이에 해당하지 않는다."}, {"q": "다음 사항 중 항공기 사고조사 및 예방장치가 아닌 것은? (변형)", "o": ["공중충돌경고장치(ACAS)", "지상접근경고장치(GPWS)", "비행자료기록장치(FDR) 및 조종실음성기록장치(CVR)", "전방돌풍경고장치"], "a": 3, "exp": "사고예방 및 조사장치는 ACAS, GPWS, FDR·CVR이 기본이며 '전방돌풍경고장치(windshear warning)'는 별도의 기상 관련 장비로 이 목록에 포함되지 않는다."}, {"q": "격납고 건물의 외측으로부터 몇 미터 이상 떨어져야 연료 급배유를 하는가?", "o": ["10m", "15m", "20m", "25m"], "a": 1, "exp": "항공기의 급유 또는 배유는 격납고 기타 건물의 외측 15m 이내에서는 금지된다."}, {"q": "항공종사자의 자격증명과 관계없는 것은 어느 것인가?", "o": ["자가용 조종사", "운항관리사", "검사주임", "항공사"], "a": 2, "exp": "항공종사자 자격증명에는 조종사, 항공사, 항공기관사, 항공교통관제사, 항공정비사, 운항관리사 등이 있으며 '검사주임'은 자격증명의 종류가 아니라 직책명이다."}, {"q": "항공기 등록기호표의 부착 위치는 어디인가?", "o": ["조종실 내부", "객실 내부", "출입구 윗부분 안쪽", "출입구 바깥쪽"], "a": 2, "exp": "등록기호표는 항공기 출입구가 있는 경우 그 주(主) 출입구 윗부분의 안쪽에, 출입구가 없는 경우 항공기 동체 외부 표면에 붙여야 한다."}, {"q": "다음 중 반드시 자격증명을 취소해야 하는 경우는?", "o": ["고의 또는 중대한 과실을 범했을 때", "부정한 방법으로 자격증명을 받은 경우", "자격증명의 종류에 따른 업무범위 외의 업무에 종사한 경우", "항공종사자가 국토교통부령으로 정하는 방법에 따라 감항성을 확인하지 아니한 경우"], "a": 1, "exp": "거짓이나 그 밖의 부정한 방법으로 자격증명 등을 받은 경우는 반드시 취소해야 하는 사유이며, 나머지 사유들은 취소하거나 효력정지를 명할 수 있는 재량사유다."}, {"q": "운항증명을 위한 검사기준 중에서 현장검사 기준이 아닌 것은?", "o": ["항공종사자 자격증명 검사", "훈련프로그램 평가", "항공종사자 훈련과목 운영계획", "항공기 적합성 검사"], "a": 2, "exp": "운항증명 현장검사 기준에는 자격증명 검사, 훈련프로그램 평가, 비상탈출 및 비상착수 시현, 항공기 적합성 검사 등이 포함되며 '훈련과목 운영계획' 자체는 서류검사 영역에 가깝다."}]}, {"title": "항공안전법 총칙·등록·증명", "kind": "예상문제", "items": [{"q": "항공안전법의 목적으로 가장 적절한 것은?", "o": ["항공사업의 면허 기준을 정한다", "국제민간항공협약 등에서 채택된 표준과 방식에 따라 항공기 항행의 안전과 관련자의 의무 등을 규정한다", "공항시설의 설치·운영만을 규정한다", "항공보안 검색 절차만을 규정한다"], "a": 1, "exp": "항공안전법은 국제민간항공협약 및 그 부속서에서 채택된 표준과 권고방식에 따라 항공기 등의 안전하고 효율적인 항행을 위한 방법과 국가·항공사업자·항공종사자의 의무 등을 규정함을 목적으로 한다."}, {"q": "항공기를 대한민국 국적으로 등록하면 발생하는 효력이 아닌 것은?", "o": ["국적을 취득한다", "항공에 사용할 수 있다", "감항증명을 받을 자격이 생긴다", "제작사의 소유권을 자동으로 이전받는다"], "a": 3, "exp": "항공기 등록의 효력은 국적 취득, 항공에의 사용 가능, 감항증명 자격 부여 등이며, 등록 자체가 제작사의 소유권을 이전시키는 것은 아니다."}, {"q": "항공기 신규등록 신청 시 첨부해야 할 서류가 아닌 것은?", "o": ["항공기의 소유권을 증명하는 서류", "항공기의 국적을 취득하지 아니하였음을 증명하는 서류", "항공기의 제원표", "정비교범 원본 전체"], "a": 3, "exp": "신규등록 신청 시에는 소유권 증명서류, 국적 미취득 증명서류, 항공기 제원표 등을 첨부하지만, 방대한 정비교범 원본 전체를 첨부하도록 요구하지는 않는다."}, {"q": "말소등록을 신청하지 않는 경우 국토교통부장관이 취할 수 있는 조치는?", "o": ["즉시 형사고발한다", "직권으로 말소등록을 할 수 있다", "아무 조치도 할 수 없다", "감항증명을 자동으로 연장한다"], "a": 1, "exp": "말소등록 사유가 있음에도 소유자 등이 신청하지 않으면 국토교통부장관은 기간을 정해 최고한 후 직권으로 말소등록을 할 수 있다."}, {"q": "감항증명의 유효기간에 대한 설명으로 옳은 것은?", "o": ["유효기간은 1년이며 연장할 수 없다", "유효기간은 2년이나 국토교통부령으로 정하는 바에 따라 연장하거나 단축할 수 있다", "유효기간이 없어 영구히 유효하다", "유효기간은 항공기 제작사가 임의로 정한다"], "a": 1, "exp": "감항증명의 유효기간은 2년으로 하되, 항공기의 형식·기령 등을 고려하여 국토교통부령으로 정하는 바에 따라 연장하거나 단축할 수 있다."}, {"q": "표준감항증명과 특별감항증명의 차이를 가장 잘 설명한 것은?", "o": ["표준감항증명은 정상적인 항공기 운항용, 특별감항증명은 연구·개발·시험비행 등 특수 목적용이다", "표준감항증명은 군용기 전용이다", "특별감항증명은 외국 국적 항공기에만 발급된다", "둘 다 동일한 절차로 발급되어 차이가 없다"], "a": 0, "exp": "표준감항증명은 통상적인 안전운항을 위한 증명이며, 특별감항증명은 연구·개발, 조종사 양성, 시험비행 등 특수한 목적의 비행에 대해 발급되는 증명이다."}, {"q": "감항증명을 신청할 수 없는 항공기는?", "o": ["대한민국 국적을 취득한 항공기", "국토교통부령으로 정하는 예외적 항공기", "임대차 항공기로서 대한민국 국적 취득 전 검사를 신청한 항공기", "대한민국 국적을 가지지 않고 예외 사유에도 해당하지 않는 일반 외국 항공기"], "a": 3, "exp": "감항증명은 원칙적으로 대한민국 국적을 가진 항공기에 대해서만 신청할 수 있으며, 예외적으로 인정되는 경우가 아니면 외국 국적 항공기는 대상이 되지 않는다."}, {"q": "형식증명과 제작증명의 관계를 옳게 설명한 것은?", "o": ["형식증명은 설계에 대한 증명이고, 제작증명은 그 설계대로 제작할 수 있는 능력을 증명하는 것이다", "제작증명이 있으면 형식증명은 필요 없다", "형식증명과 제작증명은 동일한 절차다", "제작증명은 개인에게만 발급된다"], "a": 0, "exp": "형식증명은 항공기 형식의 설계가 기술기준에 적합한지를 증명하는 것이고, 제작증명은 그 설계에 맞게 지속적으로 제작할 수 있는 기술·설비·인력·품질관리체계를 증명하는 것이다."}, {"q": "부품등제작자증명(PMA)의 목적으로 가장 알맞은 것은?", "o": ["형식증명이나 제작증명을 받지 않고도 항공기에 사용할 장비품·부품을 제작할 수 있음을 증명한다", "조종사 자격을 증명한다", "공항시설의 안전성을 증명한다", "항공사의 재무 건전성을 증명한다"], "a": 0, "exp": "부품등제작자증명은 항공기등에 사용할 장비품 또는 부품을 형식증명·제작증명과 별도로, 정해진 인력·설비·기술·검사체계를 갖추고 제작할 수 있음을 증명하는 제도다."}, {"q": "소음기준적합증명을 받아야 하는 항공기로 옳은 것은?", "o": ["모든 초경량비행장치", "터빈발동기를 장착한 항공기 또는 국제선을 운항하는 항공기", "국내선만 운항하는 경량항공기", "활공기 전부"], "a": 1, "exp": "소음기준적합증명은 터빈발동기를 장착한 항공기 또는 국제선을 운항하는 항공기를 대상으로 한다."}, {"q": "항공기 등록기호표를 부착하지 않은 항공기를 운항한 경우 나타나는 결과로 가장 알맞은 것은?", "o": ["등록기호표 부착 규정 위반으로 행정처분 대상이 될 수 있다", "자동으로 형식증명이 취소된다", "아무런 영향이 없다", "국적이 자동으로 상실된다"], "a": 0, "exp": "등록기호표는 항공안전법령이 정한 필수 표시사항으로, 이를 부착하지 않고 운항하면 관련 규정 위반으로 행정처분 대상이 될 수 있다."}, {"q": "항공기 국적기호 표시 규정으로 옳은 것은?", "o": ["로마자 소문자로 표시한다", "로마자 대문자로 표시하며 장식체를 사용하지 않는다", "한글로 표시해도 무방하다", "숫자로만 표시한다"], "a": 1, "exp": "국적기호는 로마자의 대문자로 표시하여야 하며 장식체를 사용해서는 안 된다."}, {"q": "등록기호의 첫 글자가 문자인 경우 국적기호와 등록기호 사이에 삽입해야 하는 것은?", "o": ["쉼표(,)", "붙임표(-)", "마침표(.)", "빗금(/)"], "a": 1, "exp": "등록기호의 첫 글자가 문자인 경우 국적기호와 등록기호 사이에 붙임표(-)를 삽입하여야 한다."}, {"q": "항공기 등록원부에 기재되는 사항으로 옳지 않은 것은?", "o": ["등록기호", "항공기의 형식", "소유자 또는 임차인의 성명·명칭과 주소", "탑승 승무원의 개인 신상정보"], "a": 3, "exp": "등록원부에는 등록기호, 항공기 형식, 정치장, 소유자·임차인의 성명(명칭)·주소 등이 기재되며, 개별 승무원의 신상정보는 등록원부 기재사항이 아니다."}, {"q": "수리·개조 승인의 취지로 가장 알맞은 것은?", "o": ["감항증명을 받은 항공기의 안전성이 수리·개조 후에도 기술기준에 적합함을 확인받기 위함이다", "정비사의 급여를 결정하기 위함이다", "항공사의 운임을 결정하기 위함이다", "공항 이용료를 정하기 위함이다"], "a": 0, "exp": "감항증명을 받은 항공기를 국토교통부령으로 정하는 범위에서 수리·개조하려면, 그 수리·개조가 기술기준에 적합한지에 대해 국토교통부장관의 승인을 받아야 한다."}, {"q": "긴급한 수리·개조가 필요한 경우 수리·개조승인 신청서의 제출 시한은?", "o": ["작업을 시작하기 10일 전까지만 가능하다", "작업을 시작하기 전까지 신청서를 제출할 수 있다", "작업 완료 후 30일 이내에 제출한다", "제출할 필요가 없다"], "a": 1, "exp": "일반적으로 수리·개조승인 신청서는 작업 시작 10일 전까지 제출해야 하지만, 항공기사고 등으로 긴급한 수리·개조가 필요한 경우에는 작업을 시작하기 전까지 신청서를 제출할 수 있다."}, {"q": "항공안전법상 항공기사고의 정의에 포함되는 것은?", "o": ["사람의 사망, 중상 또는 행방불명", "단순한 지연 운항", "가벼운 소음 민원", "정상적인 정비 지연"], "a": 0, "exp": "항공기사고란 사람이 항공기에 탑승하여 비행 중이거나 관련하여 발생한 사람의 사망·중상·행방불명, 항공기의 파손·구조적 손상, 항공기 위치 확인 불가 등의 경우를 말한다."}, {"q": "항공기준사고의 성격을 가장 잘 설명한 것은?", "o": ["항공기사고가 이미 발생하여 종결된 사건이다", "항공기사고로 이어질 수 있었던, 안전에 심각한 영향을 미쳤거나 미칠 수 있었던 사건이다", "단순한 정비 지연이다", "승객의 개인적 불만이다"], "a": 1, "exp": "항공기준사고는 항공기사고로 이어질 수 있었던, 항공기 운항 중 발생한 안전 관련 사건(예: 근접비행, 비상선언 등)을 말한다."}, {"q": "항공안전 자율보고 제도의 취지로 가장 알맞은 것은?", "o": ["보고자를 처벌하기 위한 것이다", "고의·중대한 과실이 없는 한 자율보고자에게 불이익 처분을 하지 않음으로써 안전정보 수집을 활성화하기 위함이다", "항공사의 매출을 늘리기 위함이다", "항공권 가격을 결정하기 위함이다"], "a": 1, "exp": "항공안전 자율보고는 항공안전위해요인을 자발적으로 보고하도록 유도해 안전정보를 폭넓게 수집하기 위한 제도로, 고의·중대한 과실이 없는 한 보고자에게 불이익한 조치를 해서는 안 된다."}, {"q": "항공안전의무보고 대상인 항공기사고를 인지한 항공종사자의 보고 시기는?", "o": ["즉시", "72시간 이내", "30일 이내", "보고 의무 없음"], "a": 0, "exp": "항공기사고 및 항공기준사고를 발생시켰거나 발생한 것을 알게 된 경우에는 즉시 보고하여야 한다."}, {"q": "항공기 등록의 종류에 해당하지 않는 것은?", "o": ["신규등록", "변경등록", "이전등록", "확인등록"], "a": 3, "exp": "항공기 등록에는 신규등록, 변경등록, 이전등록, 말소등록이 있으며 '확인등록'이라는 제도는 존재하지 않는다."}, {"q": "정비조직인증을 받아야 하는 자로 옳은 것은?", "o": ["항공기 승객만 취급하는 여행사", "항공기등, 부품등의 정비등의 업무를 하려는 항공기정비업자", "공항 청소업체", "기내식 제공업체"], "a": 1, "exp": "국토교통부령으로 정하는 정비등의 업무를 하려는 항공기정비업자 또는 외국의 항공기정비업자는 국토교통부장관으로부터 정비조직인증을 받아야 한다."}, {"q": "정비조직인증을 반드시 취소하여야 하는 사유는?", "o": ["단순 서류 미비", "거짓이나 그 밖의 부정한 방법으로 정비조직인증을 받은 경우", "경미한 업무범위 초과", "정기 점검 지연"], "a": 1, "exp": "거짓이나 부정한 방법으로 정비조직인증을 받은 경우는 반드시 인증을 취소해야 하는 사유이며, 그 외 위반사항은 취소 또는 효력정지의 재량사유에 해당한다."}, {"q": "항공기술기준을 정하여 고시하는 주체는?", "o": ["국토교통부장관", "지방항공청장", "한국교통안전공단", "항공사"], "a": 0, "exp": "국토교통부장관은 항공기등, 장비품 또는 부품의 안전을 확보하기 위하여 항공기기술기준을 정하여 고시하여야 한다."}, {"q": "감항증명 검사범위에 해당하는 것은?", "o": ["설계에 대한 검사, 제작과정에 대한 검사, 완성 후 상태 및 비행성능에 대한 검사", "조종사의 개인 신용도 검사", "항공사의 주가 검사", "승객의 건강검사"], "a": 0, "exp": "감항증명을 위한 검사는 항공기 설계에 대한 검사, 그 설계대로 제작되는 과정에 대한 검사, 완성 후 상태 및 비행성능에 대한 검사로 이루어진다."}, {"q": "운용한계지정서는 누구에게 발급되는가?", "o": ["항공기의 소유자 등", "정비조직인증기관", "항공사 임원", "지방항공청 직원"], "a": 0, "exp": "국토교통부장관 또는 지방항공청장은 운용한계를 지정하였을 때에는 운용한계지정서를 항공기의 소유자 등에게 발급하여야 한다."}]}, {"title": "자격증명·항공종사자·안전관리", "kind": "예상문제", "items": [{"q": "항공업무에 종사하려는 사람이 받아야 하는 것은?", "o": ["항공종사자 자격증명", "사업자등록증", "운전면허", "건강보험증"], "a": 0, "exp": "항공업무에 종사하려는 사람은 국토교통부장관으로부터 항공종사자 자격증명을 받아야 한다."}, {"q": "무인항공기의 운항 업무에 종사하는 경우 자격증명 규정의 적용은?", "o": ["동일하게 자격증명이 필요하다", "자격증명 규정을 적용하지 아니한다", "무조건 금지된다", "외국인만 가능하다"], "a": 1, "exp": "항공업무 중 무인항공기의 운항 업무인 경우에는 항공종사자 자격증명 규정을 적용하지 아니한다."}, {"q": "자가용 조종사(활공기 제외) 자격증명 응시 최소 연령은?", "o": ["16세", "17세", "18세", "21세"], "a": 1, "exp": "자가용 조종사 자격의 응시 연령은 17세이며, 자가용 활공기 조종사의 경우에는 16세이다."}, {"q": "운송용 조종사, 전문항공교통관제사 및 운항관리사 자격증명의 응시 연령은?", "o": ["17세", "18세", "20세", "21세"], "a": 3, "exp": "운송용 조종사, 전문항공교통관제사 및 운항관리사 자격의 응시 연령은 21세다."}, {"q": "자격증명 취소처분을 받은 사람이 다시 자격증명을 받을 수 없는 기간은?", "o": ["취소일로부터 1년", "취소일로부터 2년", "취소일로부터 3년", "영구히 받을 수 없다"], "a": 1, "exp": "자격증명 취소처분을 받고 그 취소일로부터 2년이 지나지 아니한 사람은 자격증명을 받을 수 없다."}, {"q": "항공정비사 자격증명 시험에 응시하기 위한 정비업무경력 기준(항공기 종류 한정, 일반적인 경우)은?", "o": ["해당 항공기 종류에 대한 6개월 이상의 정비업무경력을 포함하여 4년 이상의 항공기 정비업무경력", "무조건 10년 이상의 경력", "경력 없이 필기시험만 합격하면 됨", "1개월의 실무 견학"], "a": 0, "exp": "항공기 종류 한정이 필요한 항공정비사 자격증명은, 해당 항공기 종류에 대한 6개월 이상의 정비업무경력을 포함하여 4년 이상의 항공기 정비업무경력이 있는 사람 등이 응시할 수 있다."}, {"q": "고등교육법에 따른 대학·전문대학에서 항공정비사에 필요한 과정을 이수한 사람의 응시 자격 기준으로 옳은 것은?", "o": ["교육과정 이수 전의 정비실무경력이 6개월 이상이면 된다", "교육과정 이수 후의 정비실무경력이 6개월 이상이거나 이수 전의 정비실무경력이 1년 이상이어야 한다", "경력 요건이 전혀 없다", "반드시 해외 실습을 거쳐야 한다"], "a": 1, "exp": "관련 학과 이수자는 교육과정 이수 후 6개월 이상, 또는 이수 전 1년 이상의 정비실무경력이 있어야 항공정비사 시험에 응시할 수 있다."}, {"q": "국외 정비확인자로 인정받을 수 있는 사람은?", "o": ["외국정부가 발급한 항공정비사 자격증명을 받은 사람", "국내 항공사 승무원", "관광통역안내사", "일반 여행객"], "a": 0, "exp": "국외 정비확인자는 외국정부가 발급한 항공정비사 자격증명을 받은 사람이나, 항공정비사와 동등 이상의 능력이 있다고 국토교통부장관이 인정한 사람을 말한다."}, {"q": "국외 정비확인자 인정의 유효기간은?", "o": ["6개월", "1년", "2년", "영구"], "a": 1, "exp": "국외 정비 확인자 인정의 유효기간은 1년으로 한다."}, {"q": "자격증명을 반드시 취소해야 하는 사유로 옳은 것은?", "o": ["거짓이나 부정한 방법으로 자격증명을 받은 경우", "단순 지각", "경미한 서류 누락", "정기 건강검진 지연"], "a": 0, "exp": "거짓이나 그 밖의 부정한 방법으로 자격증명 등을 받은 경우는 반드시 자격증명을 취소해야 하는 사유다."}, {"q": "자격증명의 정지기간 중 항공업무에 종사한 경우의 처리로 옳은 것은?", "o": ["가벼운 훈계로 종료", "해당 자격증명을 반드시 취소하여야 한다", "정지기간을 절반으로 줄여준다", "아무 문제 없다"], "a": 1, "exp": "효력정지명령을 위반하여 정지기간에 항공업무에 종사한 경우는 반드시 자격증명을 취소하여야 하는 사유에 해당한다."}, {"q": "항공신체검사증명을 받지 아니하고 항공업무(조종연습 포함)에 종사한 경우의 결과로 옳은 것은?", "o": ["처벌 대상이 아니다", "자격증명의 취소 또는 효력정지 사유가 될 수 있다", "자동으로 자격증명이 갱신된다", "무관하다"], "a": 1, "exp": "항공신체검사증명을 받지 아니하고 조종연습을 포함한 항공업무에 종사한 경우는 자격증명의 취소 또는 효력정지 사유가 된다."}, {"q": "항공영어구술능력증명을 받지 아니하고 관련 업무에 종사한 경우는?", "o": ["문제되지 않는다", "자격증명의 취소 또는 효력정지 사유가 될 수 있다", "급여가 인상된다", "국적이 변경된다"], "a": 1, "exp": "항공영어구술능력증명을 받지 아니하고 그 업무에 종사한 경우는 자격증명의 취소 또는 효력정지 사유에 해당한다."}, {"q": "다른 사람에게 자기의 성명을 사용하여 항공업무를 수행하게 하거나 자격증명서를 빌려준 경우의 처리로 옳은 것은?", "o": ["문제되지 않는다", "해당 자격증명을 취소할 수 있다", "가벼운 경고만 한다", "벌금만 부과되고 자격은 유지된다"], "a": 1, "exp": "자기 성명을 사용해 항공업무를 대행하게 하거나 자격증명서를 빌려주는 행위를 알선한 경우는 자격증명의 취소 또는 효력정지 사유가 된다."}, {"q": "항공안전관리시스템(SMS)에 대한 설명으로 옳은 것은?", "o": ["항공사 마케팅 시스템이다", "항공기 운항 등의 안전관리를 위해 항공사업자 등이 구축·운용하는 체계다", "승객 예약 시스템이다", "정비사 급여 관리 시스템이다"], "a": 1, "exp": "항공안전관리시스템은 항공사업자 등이 항공기 운항, 정비 등의 안전을 체계적으로 관리하기 위해 마련·운용하는 체계를 말한다."}, {"q": "승인을 받지 아니하고 항공안전관리시스템을 운용한 경우 정비조직인증에 미치는 영향은?", "o": ["아무 영향이 없다", "정비조직인증 취소 사유가 될 수 있다", "자동으로 인증이 연장된다", "정비조직인증과 무관하다"], "a": 1, "exp": "승인을 받지 아니하고 항공안전관리시스템을 운용한 경우는 정비조직인증을 취소하거나 효력정지를 명할 수 있는 사유에 해당한다."}, {"q": "항공기 사고조사를 독립적으로 수행하기 위해 설치된 기관은?", "o": ["항공·철도사고조사위원회", "국토교통부 감사관실", "경찰청 교통조사과", "지방자치단체"], "a": 0, "exp": "항공·철도사고 등의 원인규명과 예방을 위한 사고조사를 독립적으로 수행하기 위하여 국무총리 소속으로 항공·철도사고조사위원회를 둔다."}, {"q": "항공·철도사고조사위원회의 소속으로 옳은 것은?", "o": ["국토교통부 소속", "국무총리 소속", "대통령 직속", "지방항공청 소속"], "a": 1, "exp": "항공·철도사고조사위원회는 국무총리 소속으로 설치된 독립적인 조사기구다."}, {"q": "사고조사위원회 위원장 및 상임위원의 임명권자는?", "o": ["국무총리", "대통령", "국토교통부장관", "지방항공청장"], "a": 1, "exp": "항공·철도사고조사위원회의 위원장 및 상임위원은 대통령이 임명하며, 비상임위원은 국무총리가 위촉한다."}, {"q": "사고조사보고서에 포함되어야 할 사항이 아닌 것은?", "o": ["사고 개요 및 사실 정보", "분석 및 결론", "규정에 따른 권고 및 건의사항", "탑승객의 개인 신용정보"], "a": 3, "exp": "사고조사보고서에는 사고 개요, 사실 정보, 분석과 결론, 안전권고 등이 포함되며 탑승객 개인의 신용정보와 같은 무관한 개인정보는 포함되지 않는다."}, {"q": "항공기사고 조사 결과에 대한 국가의 책임 원칙으로 옳은 것은?", "o": ["항공기 제작국이 항상 책임진다", "원칙적으로 사고가 발생한 국가(발생지국)가 조사 책임을 진다", "항공기 등록국만 책임진다", "탑승객 국적국이 책임진다"], "a": 1, "exp": "국제민간항공협약에 따라 체약국 항공기에 사고가 발생한 경우 원칙적으로 사고발생지국이 사고조사의 책임을 진다."}, {"q": "항공안전 전문가로 위촉될 수 있는 자격요건에 해당하는 것은?", "o": ["항공종사자 자격증명을 가진 자로서 해당 분야 10년 이상 실무경력을 갖춘 자", "무자격 일반인", "단순 아르바이트 경력자", "1개월 인턴 경력자"], "a": 0, "exp": "항공안전 전문가는 관련 자격증명을 가지고 해당 분야에서 10년 이상의 실무경력을 갖춘 사람 등 법령이 정한 요건을 갖춘 사람 중에서 위촉된다."}, {"q": "항공종사자가 항공업무를 수행할 때 고의 또는 중대한 과실로 항공기사고를 일으켜 인명피해나 재산피해를 발생시킨 경우의 처리로 옳은 것은?", "o": ["문제되지 않는다", "자격증명을 취소하여야 한다", "가벼운 서면 경고만 한다", "급여만 삭감한다"], "a": 1, "exp": "항공종사자가 고의 또는 중대한 과실로 항공업무 중 항공기사고를 일으켜 인명 또는 재산피해를 발생시킨 경우는 자격증명을 반드시 취소하여야 하는 사유다."}, {"q": "무자격자가 항공업무(항공기 정비 포함)에 종사한 경우의 벌칙으로 옳은 것은?", "o": ["2년 이하의 징역 또는 2천만원 이하의 벌금", "과태료 10만원", "훈방 조치", "처벌 규정이 없다"], "a": 0, "exp": "자격증명 없이 항공업무에 종사한 사람은 2년 이하의 징역 또는 2천만원 이하의 벌금에 처한다."}, {"q": "항공기 조종 중 주류 등의 섭취·사용 여부 측정 요구에 따르지 아니한 경우의 벌칙은?", "o": ["3년 이하의 징역 또는 3천만원 이하의 벌금", "과태료 5만원", "구두 경고", "처벌하지 않는다"], "a": 0, "exp": "항공종사자가 주류 등의 섭취·사용 여부에 대한 측정 요구에 따르지 아니한 경우 3년 이하의 징역 또는 3천만원 이하의 벌금에 처한다."}]}, {"title": "국제협약·공항시설·위험물·운항", "kind": "예상문제", "items": [{"q": "국제민간항공기구(ICAO)의 소재지는?", "o": ["프랑스 파리", "미국 시카고", "스위스 제네바", "캐나다 몬트리올"], "a": 3, "exp": "ICAO 본부는 캐나다 몬트리올에 있다."}, {"q": "국제민간항공협약(시카고협약)의 핵심 원칙으로 옳은 것은?", "o": ["각국은 자국 영역 상공에 대해 완전하고 배타적인 주권을 가진다", "모든 국가의 영공은 공동 소유이다", "항공기는 국적에 관계없이 자유롭게 어느 영공이든 통과할 수 있다", "협약은 군용기에도 동일하게 적용된다"], "a": 0, "exp": "시카고협약 제1조는 체약국이 자국 영역 상공의 공간에 대해 완전하고 배타적인 주권을 가진다고 규정한다."}, {"q": "하늘의 자유(freedoms of the air) 중 '제1의 자유'에 해당하는 것은?", "o": ["상대 체약국의 영역을 무착륙으로 횡단하는 특권", "운수 목적으로 착륙하는 특권", "자국에서 실은 여객을 상대국에 내리는 특권", "제3국行 여객을 상대국에서 싣는 특권"], "a": 0, "exp": "제1의 자유는 상대 체약국의 영역을 무착륙으로 횡단하는 특권(통과권)을 말한다."}, {"q": "국제항공운송인의 책임에 관한 국제조약이 아닌 것은?", "o": ["바르샤바협약", "로마협약", "헤이그의정서", "몬트리올협약"], "a": 1, "exp": "바르샤바협약·헤이그의정서·몬트리올협약은 국제항공운송인의 승객·화물에 대한 책임을 규정하는 조약 계열이며, 로마협약은 지상 제3자에 대한 손해배상에 관한 조약으로 성격이 다르다."}, {"q": "국제민간항공협약 부속서 1이 규정하는 내용은?", "o": ["항공종사자의 기능증명(자격증명)", "항공교통규칙", "항공기의 감항성", "사고조사"], "a": 0, "exp": "부속서 1은 항공종사자의 자격증명(기능증명)에 관한 기준을 정하고 있다."}, {"q": "국제민간항공협약 부속서 6이 규정하는 내용은?", "o": ["항공기의 운항", "항공지도", "출입국의 간소화", "항공보안시설"], "a": 0, "exp": "부속서 6은 항공기의 운항(Operation of Aircraft)에 관한 기준을 정하고 있다."}, {"q": "국제민간항공협약 부속서 8이 규정하는 내용은?", "o": ["항공기의 감항성", "항공통신", "수색구조", "안전관리"], "a": 0, "exp": "부속서 8은 항공기의 감항성(Airworthiness of Aircraft)에 관한 기준을 정한다."}, {"q": "국제민간항공협약 부속서 13이 규정하는 내용은?", "o": ["사고조사", "비행장", "항공정보업무", "위험물수송"], "a": 0, "exp": "부속서 13은 항공기 사고·준사고 조사(Aircraft Accident and Incident Investigation)에 관한 기준을 정한다."}, {"q": "국제민간항공협약 부속서 18이 규정하는 내용은?", "o": ["위험물수송", "항공기소음", "항공보안시설", "안전관리"], "a": 0, "exp": "부속서 18은 위험물의 안전수송(Safe Transport of Dangerous Goods by Air)에 관한 기준을 정한다."}, {"q": "국제항공운송협회(IATA)에 대한 설명으로 옳은 것은?", "o": ["ICAO 가맹국의 정기항공사로 구성된 국제민간단체다", "각국 정부로만 구성된 국제기구다", "군용기 운영 협의체다", "공항 건설 전문 국제기구다"], "a": 0, "exp": "IATA는 ICAO 가맹국의 국제항공업무를 담당하는 정기 항공사들로 구성된 국제민간단체로, 운임 결정·운송약관 통일 등의 활동을 한다."}, {"q": "공항시설법의 목적으로 가장 알맞은 것은?", "o": ["공항·비행장 및 항행안전시설의 설치·운영 등에 관한 사항을 정해 항공산업의 발전과 공공복리 증진에 이바지한다", "항공기 정비사의 자격을 정한다", "항공권 요금을 통제한다", "조종사의 훈련과정을 규정한다"], "a": 0, "exp": "공항시설법은 공항·비행장 및 항행안전시설의 설치·운영 등에 관한 사항을 정함으로써 항공산업의 발전과 공공복리의 증진에 이바지함을 목적으로 한다."}, {"q": "공항시설 중 기본시설에 해당하는 것은?", "o": ["활주로, 유도로, 계류장, 착륙대", "공항 이용객 편의를 위한 상업시설", "항공기 급유시설 부속 창고 이외의 홍보시설", "공항근무자 후생복지시설"], "a": 0, "exp": "활주로·유도로·계류장·착륙대 등 이착륙시설은 대표적인 공항 기본시설이며, 상업시설·후생복지시설 등은 지원시설로 분류된다."}, {"q": "공항 보호구역에 관제탑, 사업시행자 등의 허가 없이 출입하는 행위에 대한 규정으로 옳은 것은?", "o": ["아무런 제한이 없다", "국토교통부장관, 사업시행자 등의 허가 없이 출입해서는 아니 된다", "누구나 자유롭게 출입할 수 있다", "야간에만 출입이 제한된다"], "a": 1, "exp": "누구든지 국토교통부장관, 사업시행자 등 또는 항행안전시설 설치자 등의 허가 없이 보호구역(착륙대, 유도로, 계류장, 격납고 등)에 출입해서는 안 된다."}, {"q": "위험물 항공운송 시 국토교통부장관의 허가가 필요한 물질이 아닌 것은?", "o": ["폭발성 물질", "인화성 액체", "일반 서적", "방사성 물질류"], "a": 2, "exp": "위험물 운송 허가 대상은 폭발성 물질, 가스류, 인화성 액체·고체, 산화성 물질류, 독물류, 방사성 물질류, 부식성 물질류 등이며 일반 서적은 위험물이 아니다."}, {"q": "위험물 포장 및 용기의 안전성 검사 주체는?", "o": ["국토교통부장관", "지방자치단체장", "위험물 제조사 자체 검사만으로 충분", "소방서장"], "a": 0, "exp": "위험물 운송에 사용되는 포장 및 용기를 제조하거나 수입하여 판매하려는 자는 국토교통부장관에게 안전성 검사를 받아야 한다."}, {"q": "급유 또는 배유작업 중 금지되는 행위가 아닌 것은?", "o": ["무선설비를 조작하는 행위", "정전기를 일으킬 우려가 있는 물건을 사용하는 행위", "항공기 출입문을 정상적으로 개폐하는 행위", "발동기가 가열상태에서 급유하는 행위"], "a": 2, "exp": "급유·배유 중에는 무선설비 조작, 정전기 유발 물건 사용, 발동기 가동·가열 상태에서의 작업 등이 금지되며, 정상적인 출입문 개폐는 이에 해당하지 않는다."}, {"q": "항공기 급유·배유 시 화기 사용 금지와 관련해 격납고 등 건물로부터 유지해야 할 최소 거리는?", "o": ["10m", "15m", "20m", "25m"], "a": 1, "exp": "항공기의 급유 또는 배유는 격납고 등 건물의 외측으로부터 15m 이내에서는 금지된다."}, {"q": "항공기가 활공기를 예항할 때 예항줄의 적정 길이 범위는?", "o": ["10m~30m", "40m~80m", "100m~150m", "제한 없음"], "a": 1, "exp": "활공기를 예항하는 경우 예항줄의 길이는 40m 이상 80m 이하로 하여야 한다."}, {"q": "활공기 예항 시 예항줄을 이탈시켜야 하는 고도 기준은?", "o": ["예항줄 길이의 50% 이상 고도", "예항줄 길이의 80% 이상 고도", "예항줄 길이와 무관", "항상 지상에서 이탈"], "a": 1, "exp": "예항줄은 그 길이의 80%에 상당하는 고도 이상에서 이탈시켜야 한다."}, {"q": "항공운송사업용 비행기가 시계비행 시 목적지 비행장까지 필요한 연료 외에 추가로 실어야 할 연료량은?", "o": ["순항속도로 30분간 비행 가능한 양", "순항속도로 45분간 비행 가능한 양", "순항속도로 90분간 비행 가능한 양", "추가 연료가 필요 없다"], "a": 1, "exp": "항공운송사업용 및 항공기사용사업용 비행기가 시계비행을 하는 경우, 최초 착륙예정 비행장까지 필요한 연료량에 순항속도로 45분간 더 비행할 수 있는 연료량을 추가로 실어야 한다."}, {"q": "계기비행방식(IFR)에 의한 비행을 하는 항공운송사업용 비행기가 갖추어야 할 계기가 아닌 것은?", "o": ["기압고도계", "나침반", "시계", "산소포화도 측정기"], "a": 3, "exp": "IFR 비행 시 갖추어야 할 계기는 기압고도계, 나침반, 시계, 선회 및 경사지시계 등이며 '산소포화도 측정기'는 해당하지 않는다."}, {"q": "항공기가 착륙대를 이탈했을 때 피해를 줄이기 위해 설치하는 시설은?", "o": ["착륙대", "안전지대", "유도로", "계류장"], "a": 0, "exp": "착륙대는 항공기가 활주로를 이탈하는 경우 항공기와 탑승자의 피해를 줄이기 위해 활주로 주변에 설치하는 지표면 또는 수면을 말한다."}, {"q": "항공기가 정면 또는 이와 유사한 각도로 접근하는 경우, 항로를 바꾸어야 하는 방향은?", "o": ["오른쪽", "왼쪽", "위쪽", "방향 무관"], "a": 0, "exp": "정면 또는 이와 유사하게 접근하는 항공기 상호간에는 각각 기수를 오른쪽으로 돌려야 한다."}, {"q": "지상에서 이동하는 항공기가 교차하거나 유사하게 접근할 때 진로를 양보해야 하는 항공기는?", "o": ["다른 항공기를 왼쪽에 두고 있는 항공기", "다른 항공기를 오른쪽에 두고 있는 항공기", "더 큰 항공기", "더 빠른 항공기"], "a": 1, "exp": "교차하거나 이와 유사하게 접근하는 항공기 상호간에는 다른 항공기를 우측으로 보는 항공기가 진로를 양보하여야 한다."}, {"q": "최대이륙중량 5700kg 이상 항공기가 야간에 항행 또는 정류할 때 표시해야 할 등불로 옳은 것은?", "o": ["좌현등, 우현등, 미등, 충돌방지등", "항법등만", "충돌방지등만", "표시 의무 없음"], "a": 0, "exp": "최대이륙중량 5700kg 이상의 항공기가 야간에 항행하거나 비행장에 정류할 때는 좌현등, 우현등, 미등, 충돌방지등을 모두 표시해야 한다."}, {"q": "항공기의 급유·배유 작업 시 안전과 관련해 옳은 설명은?", "o": ["발동기가 가열상태에 있어도 급유할 수 있다", "필요한 위험 예방조치가 강구된 경우를 제외하고는 여객이 항공기 내에 있는 상태에서 급유·배유를 하지 않는 것이 원칙이다", "무선설비를 자유롭게 조작해도 된다", "격납고 등 폐쇄된 장소 내에서 급유하는 것이 원칙이다"], "a": 1, "exp": "여객이 항공기 내에 있는 상태에서의 급유·배유는 원칙적으로 금지되며, 필요한 위험 예방조치가 강구된 경우에만 예외적으로 허용된다."}]}];
+const SET_COUNT = SETS.length;
+const completedSets = new Set(JSON.parse(localStorage.getItem('law_quiz_completed') || '[]'));
 
-// 과목 메뉴 렌더링
-function renderSubjectMenu() {
-  const grid = document.getElementById('setGridContainer');
-  grid.innerHTML = '';
-  
-  ALL_SUBJECTS.forEach((subj, index) => {
-    const card = document.createElement('div');
-    card.className = 'set-card';
-    card.onclick = () => startQuiz(index);
-    card.innerHTML = `
-      <div class="s-num">SUBJECT 0${index + 1}</div>
-      <div class="s-name">${subj.title}</div>
-      <div class="s-sub">${subj.sub} (${subj.questions.length}문항)</div>
-    `;
-    grid.appendChild(card);
-  });
-}
+let currentSet = -1;
+let currentIdx = 0;
+let answers = [];
+let revealed = [];
 
-let currentSubjectIndex = 0;
-let QUESTIONS = [];
-let current = 0;
-let selected = [];
-let total = 25;
-
-function goMenu() {
-  document.getElementById('menuScreen').style.display = 'block';
-  document.getElementById('quizScreen').style.display = 'none';
-  renderSubjectMenu();
-}
-
-function startQuiz(subjectIdx) {
-  currentSubjectIndex = subjectIdx;
-  const targetSubj = ALL_SUBJECTS[subjectIdx];
-  
-  document.getElementById('setHeaderTitle').textContent = targetSubj.title;
-  document.getElementById('setHeaderSub').textContent = targetSubj.sub;
-  
-  const rawList = targetSubj.questions;
-  total = rawList.length;
-
-  // 보기 무작위 셔플 (Fisher-Yates)
-  QUESTIONS = rawList.map(item => {
-    let opts = [...item.opts];
-    let correctText = item.ansText;
-    for (let i = opts.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [opts[i], opts[j]] = [opts[j], opts[i]];
-    }
-    let newA = opts.indexOf(correctText);
-    return { tag: item.tag, q: item.q, opts: opts, a: newA, ex: item.ex };
-  });
-
-  selected = new Array(QUESTIONS.length).fill(null);
-  current = 0;
-
-  document.getElementById('menuScreen').style.display = 'none';
-  document.getElementById('quizScreen').style.display = 'block';
-  document.getElementById('quizCard').style.display = 'block';
-  document.getElementById('resultCard').classList.remove('show');
-
-  buildDots();
-  renderQuestion();
-}
-
-const qnumEl = document.getElementById('qnum');
-const qtagEl = document.getElementById('qtag');
-const qtextEl = document.getElementById('qtext');
-const optionsEl = document.getElementById('options');
+const homeScreen = document.getElementById('homeScreen');
+const quizScreen = document.getElementById('quizScreen');
+const resultScreen = document.getElementById('resultScreen');
+const examGrid = document.getElementById('examGrid');
+const topicGrid = document.getElementById('topicGrid');
+const qcard = document.getElementById('qcard');
+const ticksEl = document.getElementById('ticks');
+const progressLabel = document.getElementById('progressLabel');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
-const dotsEl = document.getElementById('dots');
-const progressRing = document.getElementById('progressRing');
-const progressVal = document.getElementById('progressVal');
-const quizCard = document.getElementById('quizCard');
-const resultCard = document.getElementById('resultCard');
-const submitNote = document.getElementById('submitNote');
+const backBtn = document.getElementById('backBtn');
+const peekBtn = document.getElementById('peekBtn');
 
-function buildDots(){
-  dotsEl.innerHTML = '';
-  QUESTIONS.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot';
-    d.id = 'dot'+i;
-    d.addEventListener('click', () => { current = i; renderQuestion(); });
-    dotsEl.appendChild(d);
+function makeCard(set, idx){
+  const card = document.createElement('div');
+  const isDone = completedSets.has(idx);
+  card.className = 'setcard' + (isDone ? ' done' : '');
+  card.innerHTML = `
+    <span class="snum">SET ${String(idx+1).padStart(2,'0')}</span>
+    <div class="stitle">${set.title}</div>
+    <div class="ssub">${isDone ? '완료됨 · 다시 풀기' : set.items.length + '문제'}</div>
+  `;
+  card.addEventListener('click', () => startSet(idx));
+  return card;
+}
+
+function renderHome(){
+  examGrid.innerHTML = '';
+  topicGrid.innerHTML = '';
+  SETS.forEach((set, i) => {
+    const card = makeCard(set, i);
+    if(set.kind === '기출문제') examGrid.appendChild(card);
+    else topicGrid.appendChild(card);
   });
 }
-function updateDots(){
-  QUESTIONS.forEach((_, i) => {
-    const d = document.getElementById('dot'+i);
-    if (!d) return;
-    d.className = 'dot';
-    if(i === current) d.classList.add('current');
-    if(selected[i] !== null) d.classList.add('answered');
-  });
-}
-function updateHeader(){
-  const answeredCount = selected.filter(s => s !== null).length;
-  const circumference = 188.5;
-  const offset = circumference - (answeredCount/total) * circumference;
-  progressRing.style.strokeDashoffset = offset;
-  progressVal.textContent = answeredCount + '/' + total;
-}
-function renderQuestion(){
-  const item = QUESTIONS[current];
-  qnumEl.textContent = 'Q' + String(current+1).padStart(2,'0') + ' / ' + total;
-  qtagEl.textContent = item.tag;
-  qtextEl.textContent = item.q;
-  optionsEl.innerHTML = '';
-  item.opts.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'opt' + (selected[current] === i ? ' picked' : '');
-    btn.innerHTML = '<span class="num">' + (i+1) + '</span><span>' + opt + '</span>';
-    btn.addEventListener('click', () => selectOption(i));
-    optionsEl.appendChild(btn);
-  });
-  prevBtn.disabled = current === 0;
-  const answeredCount = selected.filter(s => s !== null).length;
-  const allAnswered = answeredCount === total;
-  if(current === total - 1){
-    nextBtn.textContent = '제출하고 채점하기 →';
-    nextBtn.disabled = !allAnswered;
-    submitNote.textContent = allAnswered ? '' : '아직 ' + (total - answeredCount) + '문제가 남았습니다. 전부 풀어야 채점할 수 있어요.';
-  } else {
-    nextBtn.textContent = '다음 →';
-    nextBtn.disabled = selected[current] === null;
-    submitNote.textContent = '';
-  }
-  updateDots();
-  updateHeader();
-}
-function selectOption(i){
-  selected[current] = i;
+
+function startSet(s){
+  currentSet = s;
+  currentIdx = 0;
+  answers = new Array(SETS[s].items.length).fill(null);
+  revealed = new Array(SETS[s].items.length).fill(false);
+  homeScreen.classList.add('hidden');
+  resultScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  buildTicks();
   renderQuestion();
 }
-prevBtn.addEventListener('click', () => { if(current > 0){ current--; renderQuestion(); } });
-nextBtn.addEventListener('click', () => {
-  if(current < total - 1){ current++; renderQuestion(); }
-  else {
-    const answeredCount = selected.filter(s => s !== null).length;
-    if(answeredCount === total) showResult();
-  }
-});
-function showResult(){
-  quizCard.style.display = 'none';
-  resultCard.classList.add('show');
-  const correctCount = selected.reduce((acc, s, i) => acc + (s === QUESTIONS[i].a ? 1 : 0), 0);
-  const pct = Math.round((correctCount/total)*100);
-  document.getElementById('finalScore').textContent = correctCount + ' / ' + total;
-  document.getElementById('finalPct').textContent = pct + '%';
-  let gradeText = '';
-  if(pct >= 90) gradeText = '🛩 합격 안정권입니다!';
-  else if(pct >= 70) gradeText = '✈ 거의 다 왔어요 — 오답 노트를 확인해보세요';
-  else if(pct >= 50) gradeText = '🔧 절반 확보 — 취약 개념 복습이 필요해요';
-  else gradeText = '📘 기본 이론부터 차근차근 복습하세요';
-  document.getElementById('grade').textContent = gradeText;
-  
-  const wrongReview = document.getElementById('wrongReview');
-  const wrongSection = document.getElementById('wrongSection');
-  wrongReview.innerHTML = '';
-  const wrongList = QUESTIONS.map((item,i)=>({item,i})).filter(o => selected[o.i] !== o.item.a);
-  if(wrongList.length === 0){
-    wrongSection.innerHTML = '<div class="perfect-msg">🎯 오답이 없습니다. 전 문제 정답입니다!</div>';
-  } else {
-    wrongList.forEach(({item, i}) => {
-      const myAns = selected[i];
-      const div = document.createElement('div');
-      div.className = 'wrong-card';
-      div.innerHTML =
-        '<p class="wq"><span class="wqn">Q' + (i+1) + '.</span>' + item.q + '</p>' +
-        '<div class="answer-row">' +
-          '<span class="apill my">내 답 &nbsp;' + (myAns+1) + '. ' + item.opts[myAns] + '</span>' +
-          '<span class="apill correctans">정답 &nbsp;' + (item.a+1) + '. ' + item.opts[item.a] + '</span>' +
-        '</div>' +
-        '<div class="wexplain"><b>해설</b>' + item.ex + '</div>';
-      wrongReview.appendChild(div);
-    });
+
+function buildTicks(){
+  ticksEl.innerHTML = '';
+  SETS[currentSet].items.forEach((_, i) => {
+    const t = document.createElement('div');
+    t.className = 'tick';
+    t.id = 'tick-' + i;
+    ticksEl.appendChild(t);
+  });
+  updateTicks();
+}
+
+function updateTicks(){
+  const total = SETS[currentSet].items.length;
+  progressLabel.textContent = `${currentIdx+1} / ${total}`;
+  for(let i=0;i<total;i++){
+    const t = document.getElementById('tick-'+i);
+    t.classList.remove('done','current');
+    if(answers[i] !== null || revealed[i]) t.classList.add('done');
+    if(i === currentIdx) t.classList.add('current');
   }
 }
-document.getElementById('restartBtn').addEventListener('click', () => {
-  startQuiz(currentSubjectIndex);
+
+const CIRCLE = ["①","②","③","④"];
+
+function renderQuestion(){
+  const item = SETS[currentSet].items[currentIdx];
+  qcard.innerHTML = '';
+  const head = document.createElement('div');
+  head.className = 'qhead';
+  head.innerHTML = `<span class="qnum">Q${String(currentIdx+1).padStart(2,'0')}</span><span class="qtext">${item.q}</span>`;
+  qcard.appendChild(head);
+
+  const opts = document.createElement('div');
+  opts.className = 'opts';
+  item.o.forEach((otext, oi) => {
+    const opt = document.createElement('div');
+    let cls = 'opt';
+    if(revealed[currentIdx]){
+      if(oi === item.a) cls += ' correct';
+      else if(oi === answers[currentIdx]) cls += ' wrong';
+    } else if(answers[currentIdx] === oi){
+      cls += ' selected';
+    }
+    opt.className = cls;
+    let badge = '';
+    if(revealed[currentIdx]){
+      if(oi === item.a) badge = '<span class="badge good">정답</span>';
+      else if(oi === answers[currentIdx]) badge = '<span class="badge bad">내 선택</span>';
+    }
+    opt.innerHTML = `<span class="num">${CIRCLE[oi]}</span><span class="otext">${otext}</span>${badge}`;
+    opt.addEventListener('click', () => selectAnswer(oi));
+    opts.appendChild(opt);
+  });
+  qcard.appendChild(opts);
+
+  if(revealed[currentIdx]){
+    const exp = document.createElement('div');
+    exp.className = 'explain';
+    exp.innerHTML = `<b>해설</b> &nbsp;${item.exp}`;
+    qcard.appendChild(exp);
+  }
+
+  peekBtn.textContent = revealed[currentIdx] ? '👁 답 다시 숨기기' : '👁 바로 답 보기';
+
+  prevBtn.style.visibility = currentIdx === 0 ? 'hidden' : 'visible';
+
+  const isLast = currentIdx === SETS[currentSet].items.length - 1;
+  nextBtn.textContent = isLast ? '결과 확인' : '다음';
+  nextBtn.className = 'navbtn ' + (isLast ? 'finish' : 'next');
+  nextBtn.disabled = (answers[currentIdx] === null && !revealed[currentIdx]);
+
+  updateTicks();
+}
+
+function selectAnswer(oi){
+  if(revealed[currentIdx]) return;
+  answers[currentIdx] = oi;
+  renderQuestion();
+}
+
+peekBtn.addEventListener('click', () => {
+  revealed[currentIdx] = !revealed[currentIdx];
+  renderQuestion();
 });
 
-// 최초 로드 시 5과목 메뉴 렌더링
-renderSubjectMenu();
+prevBtn.addEventListener('click', () => {
+  if(currentIdx > 0){ currentIdx--; renderQuestion(); }
+});
+
+nextBtn.addEventListener('click', () => {
+  const isLast = currentIdx === SETS[currentSet].items.length - 1;
+  if(isLast){ showResult(); } else { currentIdx++; renderQuestion(); }
+});
+
+backBtn.addEventListener('click', () => {
+  quizScreen.classList.add('hidden');
+  resultScreen.classList.add('hidden');
+  homeScreen.classList.remove('hidden');
+  renderHome();
+});
+
+function showResult(){
+  const items = SETS[currentSet].items;
+  let correctCount = 0;
+  items.forEach((it, i) => { if(answers[i] === it.a) correctCount++; });
+
+  completedSets.add(currentSet);
+  localStorage.setItem('law_quiz_completed', JSON.stringify(Array.from(completedSets)));
+
+  quizScreen.classList.add('hidden');
+  resultScreen.classList.remove('hidden');
+  resultScreen.innerHTML = '';
+
+  const pct = Math.round((correctCount / items.length) * 100);
+  let msg;
+  if(pct >= 90) msg = "완벽에 가깝습니다. 실전 감각이 아주 좋네요.";
+  else if(pct >= 70) msg = "합격권입니다. 틀린 부분만 한 번 더 정리해보세요.";
+  else if(pct >= 50) msg = "기본기는 있습니다. 틀린 문항 위주로 복습이 필요해요.";
+  else msg = "기초 개념부터 다시 정리하는 것을 추천합니다.";
+
+  const plate = document.createElement('div');
+  plate.className = 'result-plate';
+  plate.innerHTML = `
+    <div class="score"><span>${correctCount}</span> / ${items.length}</div>
+    <div class="score-label">${SETS[currentSet].title.toUpperCase()} · CORRECT ${pct}%</div>
+    <div class="msg">${msg}</div>
+    <button class="rebtn" id="toHomeBtn">세트 목록으로</button>
+  `;
+  resultScreen.appendChild(plate);
+
+  items.forEach((item, qi) => {
+    const card = document.createElement('div');
+    card.className = 'reviewcard';
+    const head = document.createElement('div');
+    head.className = 'qhead';
+    head.innerHTML = `<span class="qnum">Q${String(qi+1).padStart(2,'0')}</span><span class="qtext">${item.q}</span>`;
+    card.appendChild(head);
+    const opts = document.createElement('div');
+    opts.className = 'opts';
+    item.o.forEach((otext, oi) => {
+      const opt = document.createElement('div');
+      let cls = 'opt';
+      if(oi === item.a) cls += ' correct';
+      else if(oi === answers[qi]) cls += ' wrong';
+      opt.className = cls;
+      let badge = '';
+      if(oi === item.a) badge = '<span class="badge good">정답</span>';
+      else if(oi === answers[qi]) badge = '<span class="badge bad">내 선택</span>';
+      opt.innerHTML = `<span class="num">${CIRCLE[oi]}</span><span class="otext">${otext}</span>${badge}`;
+      opts.appendChild(opt);
+    });
+    card.appendChild(opts);
+    const exp = document.createElement('div');
+    exp.className = 'explain';
+    exp.innerHTML = `<b>해설</b> &nbsp;${item.exp}`;
+    card.appendChild(exp);
+    resultScreen.appendChild(card);
+  });
+
+  document.getElementById('toHomeBtn').addEventListener('click', () => {
+    resultScreen.classList.add('hidden');
+    homeScreen.classList.remove('hidden');
+    renderHome();
+  });
+
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+renderHome();
 </script>
 </body>
 </html>
